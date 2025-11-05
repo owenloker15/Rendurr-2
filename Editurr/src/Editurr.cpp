@@ -2,8 +2,6 @@
 
 #include "EditurrLayer.hpp"
 
-#include <memory>
-
 int main()
 {
 	Rendurr::Application app;

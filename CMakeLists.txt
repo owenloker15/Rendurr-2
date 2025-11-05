@@ -10,6 +10,7 @@ add_subdirectory(Thirdparty/glad)
 add_subdirectory(Thirdparty/glfw)
 add_subdirectory(Thirdparty/glm)
 add_subdirectory(Thirdparty/spdlog)
+add_subdirectory(Thirdparty/stb_image)
 
 add_subdirectory(Rendurr)
 add_subdirectory(Editurr)

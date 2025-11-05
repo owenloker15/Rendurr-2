@@ -1,10 +1,11 @@
 #pragma once
 
-#include <memory>
-
 #include "Layer.hpp"
 #include "LayerStack.hpp"
 #include "Window.hpp"
+
+#include <memory>
+#include <chrono>
 
 namespace Rendurr {
 
@@ -34,6 +35,7 @@ namespace Rendurr {
 		std::unique_ptr<Window> m_window;
 		std::vector<std::unique_ptr<Layer>> m_layerStack;
 		// LayerStack m_layerStack;
+		std::chrono::time_point<std::chrono::high_resolution_clock> m_lastFrameTime;
 	};
 
 } // namespace Rendurr

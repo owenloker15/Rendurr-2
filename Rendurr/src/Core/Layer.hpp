@@ -14,7 +14,7 @@ namespace Rendurr
 		virtual void onAttach() {}
 		virtual void onDetach() {}
 
-		virtual void onUpdate() {}
+		virtual void onUpdate(float dt) {}
 		virtual void onEvent(Event& event) {}
 		virtual void onUiRender() {}
 

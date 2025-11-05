@@ -19,7 +19,7 @@ namespace Rendurr
 		void setIndexBuffer(std::unique_ptr<IndexBuffer> buffer);
 		const std::unique_ptr<IndexBuffer>& getIndexBuffer() const;
 	private:
-		unsigned int m_rendererId;
+		uint32_t m_rendererId;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 	};
 }

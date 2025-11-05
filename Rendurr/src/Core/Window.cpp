@@ -2,6 +2,7 @@
 
 #include "Log.hpp"
 #include "Events/Event.hpp"
+#include "Events/EventPublisher.hpp"
 
 namespace Rendurr
 {
@@ -41,61 +42,46 @@ namespace Rendurr
 
 	void Window::setupEventCallbacks()
 	{
-		glfwSetWindowUserPointer(m_window, &m_data);
-
 		// Window/Application Events
 		glfwSetWindowCloseCallback(m_window, [](GLFWwindow* window)
 			{
-				WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
 				WindowCloseEvent event;
-				data.callback(event);
+				EventPublisher::getInstance()->publish(event);
 			});
 
 		glfwSetWindowSizeCallback(m_window, [](GLFWwindow* window, int width, int height)
 			{
-				WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
 				WindowResizeEvent event((float)width, (float)height);
-
-				data.callback(event);
+				EventPublisher::getInstance()->publish(event);
 			});
 
 		glfwSetWindowPosCallback(m_window, [](GLFWwindow* window, int xpos, int ypos)
 			{
-				WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
 				WindowMoveEvent event((float)xpos, (float)ypos);
-
-				data.callback(event);
+				EventPublisher::getInstance()->publish(event);
 			});
 
 		// Mouse Events
 		glfwSetCursorPosCallback(m_window, [](GLFWwindow* window, double xPos, double yPos)
 			{
-				WindowData& data = *static_cast<WindowData*>(glfwGetWindowUserPointer(window));
-
 				MouseMoveEvent event((float)xPos, (float)yPos);
-
-				data.callback(event);
+				EventPublisher::getInstance()->publish(event);
 			});
 
 		glfwSetMouseButtonCallback(m_window, [](GLFWwindow* window, int button, int action, int mods)
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
 				switch (action)
 				{
 				case GLFW_PRESS:
 				{
 					MousePressEvent event(button);
-					data.callback(event);
+					EventPublisher::getInstance()->publish(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
 					MouseReleaseEvent event(button);
-					data.callback(event);
+					EventPublisher::getInstance()->publish(event);
 					break;
 				}
 				}
@@ -103,10 +89,8 @@ namespace Rendurr
 
 		glfwSetScrollCallback(m_window, [](GLFWwindow* window, double xOffset, double yOffset)
 			{
-				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-
 				MouseScrollEvent event((float)xOffset, (float)yOffset);
-				data.callback(event);
+				EventPublisher::getInstance()->publish(event);
 			});
 	}
 }

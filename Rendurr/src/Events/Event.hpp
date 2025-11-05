@@ -3,15 +3,29 @@
 #include "Core/Input.hpp"
 
 #include <string>
+#include <typeinfo>
 
 namespace Rendurr
 {
+#define EVENT_TYPE(NAME) \
+	static std::string getStaticType() \
+	{ \
+ return #NAME; \
+} \
+ \
+    std::string getType() const override \
+    { \
+        return getStaticType(); \
+    }
+
 	class Event
 	{
 	public:
 		virtual ~Event() = default;
 
 		virtual std::string toString() const = 0;
+
+		virtual std::string getType() const = 0;
 
 		bool handled = false;
 	};
@@ -25,6 +39,8 @@ namespace Rendurr
 		{
 			return "WindowCloseEvent";
 		}
+
+		EVENT_TYPE(WindowCloseEvent);
 
 	};
 
@@ -43,6 +59,8 @@ namespace Rendurr
 
 		void setHeight(float height) { m_height = height; }
 		float getHeight() const { return m_height; }
+
+		EVENT_TYPE(WindowResizeEvent);
 
 	private:
 		float m_width;
@@ -65,6 +83,8 @@ namespace Rendurr
 		void setYPos(float xPos) { m_yPos = xPos; }
 		float getYPos() const { return m_yPos; }
 
+		EVENT_TYPE(WindowMoveEvent);
+
 	private:
 		float m_xPos;
 		float m_yPos;
@@ -86,6 +106,8 @@ namespace Rendurr
 		void setYPos(float yPos) { m_yPos = yPos; }
 		float getYPos() const { return m_yPos; }
 
+		EVENT_TYPE(MouseMoveEvent);
+
 	private:
 		float m_xPos;
 		float m_yPos;
@@ -104,6 +126,9 @@ namespace Rendurr
 		void setButton(MouseCode button) { m_button = button; }
 		MouseCode getButton() const { return m_button; }
 
+		EVENT_TYPE(MousePressEvent);
+
+
 	private:
 		MouseCode m_button;
 	};
@@ -120,6 +145,8 @@ namespace Rendurr
 
 		void setButton(MouseCode button) { m_button = button; }
 		MouseCode getButton() const { return m_button; }
+
+		EVENT_TYPE(MouseReleaseEvent);
 
 	private:
 		MouseCode m_button;
@@ -140,6 +167,8 @@ namespace Rendurr
 
 		void setYOffset(float yOffset) { m_yOffset = yOffset; }
 		float getYOffset() const { return m_yOffset; }
+
+		EVENT_TYPE(MouseScrollEvent);
 
 	private:
 		float m_xOffset;

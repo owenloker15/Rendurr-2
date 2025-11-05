@@ -1,10 +1,10 @@
 #include "Application.hpp"
 
-#include <glad/glad.h>
-
 #include "Log.hpp"
+#include "Events/EventPublisher.hpp"
 #include "Render/Renderer.hpp"
 #include "Render/Shader.hpp"
+#include "Utils/Timer.hpp"
 
 namespace Rendurr {
 	Application::Application()
@@ -15,25 +15,30 @@ namespace Rendurr {
 		windowData.width = 800;
 		windowData.height = 600;
 		windowData.title = "Rendurr Engine";
-		windowData.callback = [this](Event& e)
-			{
-				onEvent(e);
-			};
 
 		m_window = std::make_unique<Window>(windowData);
+
+		//EventPublisher::getInstance()->subscribe<WindowCloseEvent>([this](WindowCloseEvent& e) {onWindowCloseEvent(e); });
+		EventPublisher::getInstance()->subscribe<WindowCloseEvent>(this, &Application::onWindowCloseEvent);
 	}
 
 	void Application::run() {
 		m_running = true;
 		Renderer::enableDebugOutput();
 
+		m_lastFrameTime = Rendurr::getTime();
 		while (m_running) {
+			auto currentTime = Rendurr::getTime();
+			std::chrono::duration<float> dt = currentTime - m_lastFrameTime;
+			m_lastFrameTime = currentTime;
+			float dt_seconds = dt.count();
+
 			Renderer::setClearColor({ 1.0f, 0.0f, 0.0f, 1.0f });
 			Renderer::clear();
 
 			for (const auto& layer : m_layerStack)
 			{
-				layer->onUpdate();
+				layer->onUpdate(dt_seconds);
 			}
 
 			m_window->onUpdate();
@@ -53,12 +58,6 @@ namespace Rendurr {
 		m_layerStack.pushOverlay(layer);
 	}
 	*/
-
-	void Application::onEvent(Event& event)
-	{
-		EventNotifier notifier(event);
-		notifier.Notify<WindowCloseEvent>([this](WindowCloseEvent& e) {	return onWindowCloseEvent(e); });
-	}
 
 	bool Application::onWindowCloseEvent(WindowCloseEvent& event)
 	{

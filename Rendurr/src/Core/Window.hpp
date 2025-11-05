@@ -17,8 +17,6 @@ namespace Rendurr
 		int width;
 		int height;
 		std::string title;
-
-		std::function<void(Event&)> callback;
 	};
 
 	class Window

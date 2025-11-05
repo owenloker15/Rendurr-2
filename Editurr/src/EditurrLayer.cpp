@@ -1,8 +1,8 @@
 #include "EditurrLayer.hpp"
 
-#include <iostream>
-#include <glad/glad.h>
 #include <Render/Renderer.hpp>
+
+#include "glm/ext/matrix_transform.hpp"
 
 namespace Editurr
 {
@@ -11,12 +11,13 @@ namespace Editurr
 		m_shader = std::make_unique<Rendurr::Shader>("assets/shaders/vertex.glsl", "assets/shaders/frag.glsl");
 
 		std::vector<Rendurr::Vertex> vertices = {
-			{{0.5f, 0.5f, 0.0f}},
-			{{0.5f, -0.5f, 0.0f}},
-			{{-0.5f, -0.5f, 0.0f}},
-			{{-0.5f, 0.5f, 0.0f}}
+			{{0.5f, 0.5f, 0.0f}, {1.0f, 1.0f}},
+			{{0.5f, -0.5f, 0.0f}, {1.0f, 0.0f}},
+			{{-0.5f, -0.5f, 0.0f}, {0.0f, 0.0f}},
+			{{-0.5f, 0.5f, 0.0f}, {0.0f, 1.0f}}
 		};
-		std::vector<uint32_t> indices{
+
+		std::vector<uint32_t> indices = {
 			0, 1, 3,
 			1, 2, 3
 		};
@@ -26,24 +27,24 @@ namespace Editurr
 		m_vertexArray = std::make_unique<Rendurr::VertexArray>();
 		m_vertexArray->addVertexBuffer(m_vertexBuffer.get());
 		m_vertexArray->setIndexBuffer(std::move(m_indexBuffer));
-
-		GLint vao = 0;
-glGetIntegerv(GL_VERTEX_ARRAY_BINDING, &vao);
-
-GLint ebo = 0;
-glGetIntegerv(GL_ELEMENT_ARRAY_BUFFER_BINDING, &ebo);
-
-std::cout << "Current VAO: " << vao << "  EBO: " << ebo << std::endl;
-
+		m_texture = std::make_unique<Rendurr::Texture>("assets/textures/wall.jpg");
 	}
 
 	void EditurrLayer::onAttach()
 	{
 	}
 
-	void EditurrLayer::onUpdate()
+	void EditurrLayer::onUpdate(float dt)
 	{
 		Rendurr::Renderer::setViewport(800, 600);
+
+		m_texture->bind(0);
+
+		glm::mat4 transform = glm::mat4(1.0f);
+		transform = glm::translate(transform, { 0.0f, 0.0f, 0.0f });
+		transform = glm::rotate(transform, dt, glm::vec3(0.0f, 0.0f, 1.0f));
+		Rendurr::MeshUniforms uniform = Rendurr::MeshUniforms{ transform, 0 };
+		m_shader->uploadUniformSet(uniform);
 
 		m_shader->use();
 		m_vertexArray->bind();

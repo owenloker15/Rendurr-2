@@ -6,10 +6,10 @@
 
 namespace
 {
-	unsigned int compileShader(GLenum shaderType, const std::string& shaderSource)
+	uint32_t compileShader(GLenum shaderType, const std::string& shaderSource)
 	{
 		// Create shader object
-		unsigned int shader = glCreateShader(shaderType);
+		uint32_t shader = glCreateShader(shaderType);
 
 		// Attach the shader source to the shader object and compile the shader
 		const char* shaderCStr = shaderSource.c_str();
@@ -40,8 +40,8 @@ namespace Rendurr
 		std::string fragmentShaderContent = Utils::readFileTextContents(fragmentFilepath);
 
 		// Compile vertex and fragment shaders
-		unsigned int vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderContent);
-		unsigned int fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderContent);
+		uint32_t vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderContent);
+		uint32_t fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderContent);
 
 		// Link the compiled shaders to the shader program
 		m_shaderProgramId = glCreateProgram();

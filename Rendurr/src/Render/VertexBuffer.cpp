@@ -37,10 +37,10 @@ namespace Rendurr
 
 	void VertexBuffer::unbind() const
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		// glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	const unsigned int VertexBuffer::getRendererId() const
+	uint32_t VertexBuffer::getRendererId() const
 	{
 		return m_rendererId;
 	}

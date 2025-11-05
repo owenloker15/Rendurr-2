@@ -1,14 +1,15 @@
 #pragma once
 #include <vector>
 
-#include "glm/vec3.hpp"
+#include <glm/vec3.hpp>
+#include <glm/vec2.hpp>
 
 namespace Rendurr
 {
 	struct Vertex
 	{
-		Vertex(glm::vec3 position) : position(position) {}
 		glm::vec3 position;
+		glm::vec2 texCoords;
 	};
 
 	class VertexBuffer
@@ -20,8 +21,8 @@ namespace Rendurr
 		void bind() const;
 		void unbind() const;
 
-		const unsigned int getRendererId() const;
+		uint32_t getRendererId() const;
 	private:
-		unsigned int m_rendererId;
+		uint32_t m_rendererId;
 	};
 }

@@ -30,12 +30,17 @@ set(RENDURR_SOURCES
     src/Render/Renderer.cpp
     src/Render/Shader.hpp
     src/Render/Shader.cpp
+    src/Render/ShaderUniforms.hpp
+    src/Render/ShaderUniforms.cpp
+    src/Render/Texture.hpp
+    src/Render/Texture.cpp
     src/Render/VertexArray.hpp
     src/Render/VertexArray.cpp
     src/Render/VertexBuffer.hpp
     src/Render/VertexBuffer.cpp
 
     src/Utils/FileUtils.hpp
+    src/Utils/Timer.hpp
 )
 
 # Create static library
@@ -55,6 +60,10 @@ target_link_libraries(Rendurr PUBLIC
     glad
     glfw
     spdlog
+)
+
+target_link_libraries(Rendurr PRIVATE 
+    stb_image
 )
 
 # Prevents glfw from including any opengl headers
