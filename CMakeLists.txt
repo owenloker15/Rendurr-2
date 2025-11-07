@@ -6,11 +6,12 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Add third-party libraries
-add_subdirectory(Thirdparty/glad)
-add_subdirectory(Thirdparty/glfw)
-add_subdirectory(Thirdparty/glm)
-add_subdirectory(Thirdparty/spdlog)
-add_subdirectory(Thirdparty/stb_image)
+add_subdirectory(ThirdParty/glad)
+add_subdirectory(ThirdParty/glfw)
+add_subdirectory(ThirdParty/glm)
+add_subdirectory(ThirdParty/spdlog)
+add_subdirectory(ThirdParty/stb_image)
 
+# Add Rendurr and Editurr libraries
 add_subdirectory(Rendurr)
 add_subdirectory(Editurr)
