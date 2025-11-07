@@ -39,6 +39,9 @@ set(RENDURR_SOURCES
     src/Render/VertexBuffer.hpp
     src/Render/VertexBuffer.cpp
 
+    src/Scene/Camera.hpp
+    src/Scene/Camera.cpp
+
     src/Utils/FileUtils.hpp
     src/Utils/Timer.hpp
 )

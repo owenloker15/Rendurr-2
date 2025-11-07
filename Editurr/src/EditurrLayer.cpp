@@ -6,7 +6,7 @@
 
 namespace Editurr
 {
-	EditurrLayer::EditurrLayer(std::string name) : Layer(name)
+	EditurrLayer::EditurrLayer(std::string name) : m_camera({0.0f, 0.0f, 5.0f}, {0.0f, 0.0f, 0.0f}), Layer(name)
 	{
 		m_shader = std::make_unique<Rendurr::Shader>("assets/shaders/vertex.glsl", "assets/shaders/frag.glsl");
 
