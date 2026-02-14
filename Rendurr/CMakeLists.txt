@@ -41,6 +41,11 @@ set(RENDURR_SOURCES
 
     src/Scene/Camera.hpp
     src/Scene/Camera.cpp
+    src/Scene/CameraController.hpp
+    src/Scene/CameraController.cpp
+    src/Scene/IProjectionStrategy.hpp
+    src/Scene/OrthographicProjectionStrategy.hpp
+    src/Scene/OrthographicProjectionStrategy.cpp
 
     src/Utils/FileUtils.hpp
     src/Utils/Timer.hpp

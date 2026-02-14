@@ -15,11 +15,12 @@ namespace Rendurr
 		void bind() const;
 		void unbind() const;
 
-		void addVertexBuffer(const VertexBuffer* buffer);
+		void addVertexBuffer(std::unique_ptr<VertexBuffer> buffer);
 		void setIndexBuffer(std::unique_ptr<IndexBuffer> buffer);
 		const std::unique_ptr<IndexBuffer>& getIndexBuffer() const;
 	private:
 		uint32_t m_rendererId;
+		std::unique_ptr<VertexBuffer> m_vertexBuffer;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
 	};
 }

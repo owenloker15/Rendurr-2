@@ -9,9 +9,16 @@
 
 namespace Rendurr {
 
+	struct ApplicationSpecification
+	{
+		std::string title;
+		double width;
+		double height;
+	};
+
 	class Application {
 	public:
-		Application();
+		Application(const ApplicationSpecification& spec);
 		~Application() = default;
 
 		void run();
@@ -21,10 +28,8 @@ namespace Rendurr {
 		{
 			m_layerStack.emplace_back(std::make_unique<T>(std::forward<Args>(args) ... ));
 		}
-		void pushOverlay(Layer* layer);
 
 	private:
-		void onEvent(Event& event);
 		bool onWindowCloseEvent(WindowCloseEvent& event);
 
 	private:

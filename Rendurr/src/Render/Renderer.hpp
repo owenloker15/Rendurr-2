@@ -12,8 +12,8 @@ namespace Rendurr
 		static void clear();
 		static void setClearColor(const glm::vec4& rgba);
 		static void setViewport(float width, float height);
-		static void draw(const VertexArray* vertexArray);
+		static void enableDepthTesting();
 
-		static void enableDebugOutput();
+		static void draw(const VertexArray* vertexArray);
 	};
 }

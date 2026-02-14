@@ -24,9 +24,10 @@ namespace Rendurr
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::addVertexBuffer(const VertexBuffer* buffer)
+	void VertexArray::addVertexBuffer(std::unique_ptr<VertexBuffer> buffer)
 	{
-		glVertexArrayVertexBuffer(m_rendererId, 0, buffer->getRendererId(), 0, sizeof(Vertex));
+		m_vertexBuffer = std::move(buffer);
+		glVertexArrayVertexBuffer(m_rendererId, 0, m_vertexBuffer->getRendererId(), 0, sizeof(Vertex));
 
 		glEnableVertexArrayAttrib(m_rendererId, 0);
 		glEnableVertexArrayAttrib(m_rendererId, 1);

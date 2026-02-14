@@ -4,6 +4,17 @@
 
 namespace Rendurr
 {
+	class CameraUniform
+	{
+	public:
+		CameraUniform(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+
+		void upload(uint32_t shaderId) const;
+	private:
+		glm::mat4 m_viewMatrix;
+		glm::mat4 m_projectionMatrix;
+	};
+
 	class MeshUniforms
 	{
 	public:

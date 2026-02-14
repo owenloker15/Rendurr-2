@@ -7,24 +7,26 @@
 #include "Utils/Timer.hpp"
 
 namespace Rendurr {
-	Application::Application()
+	Application::Application(const ApplicationSpecification& spec)
 	{
 		Log::Init();
 
+		// TODO fix this jankness
 		WindowData windowData;
-		windowData.width = 800;
-		windowData.height = 600;
-		windowData.title = "Rendurr Engine";
+		windowData.width = spec.width;
+		windowData.height = spec.height;
+		windowData.title = spec.title;
 
 		m_window = std::make_unique<Window>(windowData);
 
 		//EventPublisher::getInstance()->subscribe<WindowCloseEvent>([this](WindowCloseEvent& e) {onWindowCloseEvent(e); });
 		EventPublisher::getInstance()->subscribe<WindowCloseEvent>(this, &Application::onWindowCloseEvent);
+
+			Renderer::enableDepthTesting();
 	}
 
 	void Application::run() {
 		m_running = true;
-		Renderer::enableDebugOutput();
 
 		m_lastFrameTime = Rendurr::getTime();
 		while (m_running) {
@@ -33,7 +35,7 @@ namespace Rendurr {
 			m_lastFrameTime = currentTime;
 			float dt_seconds = dt.count();
 
-			Renderer::setClearColor({ 1.0f, 0.0f, 0.0f, 1.0f });
+			Renderer::setClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 			Renderer::clear();
 
 			for (const auto& layer : m_layerStack)
