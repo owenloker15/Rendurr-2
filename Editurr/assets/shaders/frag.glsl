@@ -1,4 +1,5 @@
 #version 330 core
+in vec3 o_Normals;
 in vec2 o_TexCoords;
 
 out vec4 FragColor;

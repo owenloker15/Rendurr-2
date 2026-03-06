@@ -5,7 +5,7 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-namespace 
+namespace
 {
 	GLint getUniformLocation(uint32_t shaderId, const char* uniformName)
 	{

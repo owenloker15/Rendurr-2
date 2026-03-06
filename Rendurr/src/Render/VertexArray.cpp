@@ -29,14 +29,17 @@ namespace Rendurr
 		m_vertexBuffer = std::move(buffer);
 		glVertexArrayVertexBuffer(m_rendererId, 0, m_vertexBuffer->getRendererId(), 0, sizeof(Vertex));
 
-		glEnableVertexArrayAttrib(m_rendererId, 0);
-		glEnableVertexArrayAttrib(m_rendererId, 1);
+		glEnableVertexArrayAttrib(m_rendererId, 0); // Position
+		glEnableVertexArrayAttrib(m_rendererId, 1); // Normals
+		glEnableVertexArrayAttrib(m_rendererId, 2); // Texture Coordinates
 
 		glVertexArrayAttribFormat(m_rendererId, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
-		glVertexArrayAttribFormat(m_rendererId, 1, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, texCoords));
+		glVertexArrayAttribFormat(m_rendererId, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+		glVertexArrayAttribFormat(m_rendererId, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, texCoords));
 
 		glVertexArrayAttribBinding(m_rendererId, 0, 0);
 		glVertexArrayAttribBinding(m_rendererId, 1, 0);
+		glVertexArrayAttribBinding(m_rendererId, 2, 0);
 	}
 
 	void VertexArray::setIndexBuffer(std::unique_ptr<IndexBuffer> buffer)

@@ -14,5 +14,5 @@ namespace Rendurr
 		virtual glm::mat4 calculateViewMatrix(Camera& camera) = 0;
 		virtual glm::mat4 calculateProjectionMatrix(Camera& camera) = 0;
 	};
-	
+
 }

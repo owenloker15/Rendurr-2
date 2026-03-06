@@ -8,10 +8,11 @@
 
 namespace Rendurr
 {
-	CameraController::CameraController(double aspectRatio, double zoom, std::unique_ptr<IProjectionStrategy> projectionStrategy) : m_camera(aspectRatio, zoom, { 0, 0, 1 }, { 0, 0, 0 }), m_strategy(std::move(projectionStrategy)){
+	CameraController::CameraController(double aspectRatio, double zoom, std::unique_ptr<IProjectionStrategy> projectionStrategy) : m_camera(aspectRatio, zoom, { 0, 0, 1 }, { 0, 0, 0 }), m_strategy(std::move(projectionStrategy)) {
 		EventPublisher::getInstance()->subscribe<MousePressEvent>(this, &CameraController::onMousePressEvent);
 		EventPublisher::getInstance()->subscribe<MouseReleaseEvent>(this, &CameraController::onMouseReleaseEvent);
 		EventPublisher::getInstance()->subscribe<MouseMoveEvent>(this, &CameraController::onMouseMoveEvent);
+		EventPublisher::getInstance()->subscribe<MouseScrollEvent>(this, &CameraController::onMouseScrollEvent);
 	}
 
 	glm::mat4 CameraController::getViewMatrix()
@@ -108,6 +109,14 @@ namespace Rendurr
 
 		m_lastMouseXPos = xPos;
 		m_lastMouseYPos = yPos;
+
+		return true;
+	}
+
+	bool CameraController::onMouseScrollEvent(MouseScrollEvent& event)
+	{
+		float zoomChange = event.getYOffset() * m_zoomSensitivity;
+		m_camera.zoom -= zoomChange;
 
 		return true;
 	}

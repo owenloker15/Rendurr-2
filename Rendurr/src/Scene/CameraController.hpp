@@ -20,6 +20,7 @@ namespace Rendurr
 		bool onMousePressEvent(MousePressEvent& event);
 		bool onMouseReleaseEvent(MouseReleaseEvent& event);
 		bool onMouseMoveEvent(MouseMoveEvent& event);
+		bool onMouseScrollEvent(MouseScrollEvent& event);
 	private:
 		std::unique_ptr<IProjectionStrategy> m_strategy;
 		Camera m_camera;

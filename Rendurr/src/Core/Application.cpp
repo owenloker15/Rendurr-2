@@ -22,7 +22,7 @@ namespace Rendurr {
 		//EventPublisher::getInstance()->subscribe<WindowCloseEvent>([this](WindowCloseEvent& e) {onWindowCloseEvent(e); });
 		EventPublisher::getInstance()->subscribe<WindowCloseEvent>(this, &Application::onWindowCloseEvent);
 
-			Renderer::enableDepthTesting();
+		Renderer::enableDepthTesting();
 	}
 
 	void Application::run() {
