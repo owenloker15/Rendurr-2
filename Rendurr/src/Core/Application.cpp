@@ -4,11 +4,16 @@
 #include "Events/EventPublisher.hpp"
 #include "Render/Renderer.hpp"
 #include "Render/Shader.hpp"
+#include "UI/UiLayer.hpp"
 #include "Utils/Timer.hpp"
 
 namespace Rendurr {
+	Application* Application::s_application = nullptr;
+
 	Application::Application(const ApplicationSpecification& spec)
 	{
+		s_application = this;
+
 		Log::Init();
 
 		// TODO fix this jankness
@@ -17,10 +22,11 @@ namespace Rendurr {
 		windowData.height = spec.height;
 		windowData.title = spec.title;
 
-		m_window = std::make_unique<Window>(windowData);
+		m_window = std::make_shared<Window>(windowData);
 
-		//EventPublisher::getInstance()->subscribe<WindowCloseEvent>([this](WindowCloseEvent& e) {onWindowCloseEvent(e); });
 		EventPublisher::getInstance()->subscribe<WindowCloseEvent>(this, &Application::onWindowCloseEvent);
+
+		pushLayer<UiLayer>();
 
 		Renderer::enableDepthTesting();
 	}
@@ -35,13 +41,17 @@ namespace Rendurr {
 			m_lastFrameTime = currentTime;
 			float dt_seconds = dt.count();
 
-			Renderer::setClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
-			Renderer::clear();
-
 			for (const auto& layer : m_layerStack)
 			{
 				layer->onUpdate(dt_seconds);
 			}
+
+			UiLayer::startFrame();
+			for (const auto& layer : m_layerStack)
+			{
+				layer->onUiRender();
+			}
+			UiLayer::endFrame();
 
 			m_window->onUpdate();
 		}
@@ -49,17 +59,20 @@ namespace Rendurr {
 		m_running = false;
 	}
 
-	/*
-	void Application::pushLayer(Layer* layer)
+	void Application::close()
 	{
-		m_layerStack.pushLayer(layer);
+		m_running = false;
 	}
 
-	void Application::pushOverlay(Layer* layer)
+	Application& Application::getInstance()
 	{
-		m_layerStack.pushOverlay(layer);
+		return *s_application;
 	}
-	*/
+
+	std::shared_ptr<Window> Application::getWindow() const
+	{
+		return m_window;
+	}
 
 	bool Application::onWindowCloseEvent(WindowCloseEvent& event)
 	{

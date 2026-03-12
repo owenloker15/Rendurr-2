@@ -22,6 +22,8 @@ set(RENDURR_SOURCES
     src/Events/EventPublisher.hpp
     src/Events/EventPublisher.cpp
 
+    src/Render/Framebuffer.hpp
+    src/Render/Framebuffer.cpp
     src/Render/IndexBuffer.hpp
     src/Render/IndexBuffer.cpp
     src/Render/RenderContext.hpp
@@ -47,6 +49,9 @@ set(RENDURR_SOURCES
     src/Scene/OrthographicProjectionStrategy.hpp
     src/Scene/OrthographicProjectionStrategy.cpp
 
+    src/UI/UiLayer.hpp
+    src/UI/UiLayer.cpp
+
     src/Utils/FileUtils.hpp
     src/Utils/Timer.hpp
 )
@@ -60,14 +65,43 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/src PREFIX "src" FILES ${RENDURR_S
 # Set include directory as src
 target_include_directories(Rendurr PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/ThirdParty/glm
+    ${THIRDPARTY_DIR}/glm
 )
+
+# ImGui
+# ImGui sources
+set(IMGUI_SOURCES
+    ${THIRDPARTY_DIR}/imgui/imgui.cpp
+    ${THIRDPARTY_DIR}/imgui/imgui_demo.cpp
+    ${THIRDPARTY_DIR}/imgui/imgui_draw.cpp
+    ${THIRDPARTY_DIR}/imgui/imgui_tables.cpp
+    ${THIRDPARTY_DIR}/imgui/imgui_widgets.cpp
+    ${THIRDPARTY_DIR}/imgui/backends/imgui_impl_glfw.cpp
+    ${THIRDPARTY_DIR}/imgui/backends/imgui_impl_opengl3.cpp
+)
+
+# Add ImGui
+add_library(imgui STATIC ${IMGUI_SOURCES})
+
+# Set ImGui public include directories
+target_include_directories(imgui PUBLIC
+    ${THIRDPARTY_DIR}/imgui
+    ${THIRDPARTY_DIR}/imgui/backends
+)
+
+# Link ImGui to libraries
+target_link_libraries(imgui PUBLIC 
+    glfw
+) 
+# Add ImGui to ThirdParty folder in Visual Studio
+set_target_properties(imgui PROPERTIES FOLDER "ThirdParty")
 
 # Link publicly (all things liking to this will inherit)
 target_link_libraries(Rendurr PUBLIC 
     glad
     glfw
     spdlog
+    imgui
 )
 
 target_link_libraries(Rendurr PRIVATE 

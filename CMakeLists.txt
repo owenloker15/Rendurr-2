@@ -7,6 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
+set(THIRDPARTY_DIR ${CMAKE_SOURCE_DIR}/ThirdParty)
 
 # Add third-party libraries
 add_subdirectory(ThirdParty/glad)

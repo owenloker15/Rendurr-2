@@ -14,8 +14,8 @@ namespace Rendurr
 {
 	struct WindowData
 	{
-		int width;
-		int height;
+		uint32_t width = 0;
+		uint32_t height = 0;
 		std::string title;
 	};
 
@@ -25,7 +25,12 @@ namespace Rendurr
 		Window(const WindowData& windowData);
 		~Window();
 
+		uint32_t getWidth() const;
+		uint32_t getHeight() const;
+
 		void onUpdate();
+
+		GLFWwindow* getNativeWindow() const;
 
 	private:
 		void setupEventCallbacks();

@@ -33,11 +33,26 @@ namespace Rendurr
 		glfwDestroyWindow(m_window);
 	}
 
+	uint32_t Window::getWidth() const
+	{
+		return m_data.width;
+	}
+
+	uint32_t Window::getHeight() const
+	{
+		return m_data.height;
+	}
+
 	void Window::onUpdate()
 	{
 		m_renderContext->swapBuffers();
 
 		glfwPollEvents();
+	}
+
+	GLFWwindow* Window::getNativeWindow() const
+	{
+		return m_window;
 	}
 
 	void Window::setupEventCallbacks()
