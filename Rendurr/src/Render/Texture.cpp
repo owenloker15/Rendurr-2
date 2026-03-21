@@ -8,7 +8,7 @@
 
 namespace Rendurr
 {
-	Texture::Texture(const std::string& filepath)
+	Texture::Texture(const std::filesystem::path& filepath, TextureType type) : m_type(type)
 	{
 		stbi_set_flip_vertically_on_load(true);
 
@@ -22,7 +22,7 @@ namespace Rendurr
 
 		// Read texture data from file
 		int width, height, numChannels;
-		unsigned char* data = stbi_load(filepath.c_str(), &width, &height, &numChannels, 0);
+		unsigned char* data = stbi_load(filepath.string().c_str(), &width, &height, &numChannels, 0);
 
 		if (data)
 		{
@@ -50,7 +50,7 @@ namespace Rendurr
 			}
 			else
 			{
-				RND_CORE_ERROR("Unsupported number of channels: {} for {}", numChannels, filepath);
+				RND_CORE_ERROR("Unsupported number of channels: {} for {}", numChannels, filepath.string());
 			}
 
 			glTextureStorage2D(m_rendererId, 1, internalFormat, width, height);
@@ -61,15 +61,28 @@ namespace Rendurr
 		else
 		{
 			std::string errorReason = stbi_failure_reason();
-			RND_CORE_ERROR("Failed to load texture image data: {} - {}", filepath, errorReason);
+			RND_CORE_ERROR("Failed to load texture image data: {} - {}", filepath.string(), errorReason);
 		}
 
 		stbi_image_free(data);
 
 	}
 
+	TextureType Texture::getType() const
+	{
+		return m_type;
+	}
+
 	void Texture::bind(uint32_t textureSlot) const
 	{
 		glBindTextureUnit(textureSlot, m_rendererId);
+	}
+
+	std::pair<std::string, uint32_t> Texture::TextureTypeToString(TextureType type)
+	{
+	    switch (type) {
+	    case TextureType::Ambient: return std::make_pair<std::string, uint32_t>("u_Material_albedo", 0);
+	    default: return std::make_pair<std::string, uint32_t>("", -1);
+	    }
 	}
 }

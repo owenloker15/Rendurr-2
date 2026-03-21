@@ -1,8 +1,11 @@
 #include "EditurrLayer.hpp"
+#include "EditurrUtils.hpp"
+#include "EditurrConfig.h"
 
 #include <Render/Renderer.hpp>
 
 #include <Scene/OrthographicProjectionStrategy.hpp>
+#include <Scene/Mesh.hpp>
 
 #include <glm/ext/matrix_transform.hpp>
 
@@ -91,7 +94,8 @@ namespace Editurr
 {
 	EditurrLayer::EditurrLayer(std::string name) : m_cameraController(1280.0 / 720, 5.0, std::make_unique<Rendurr::OrthographicProjectionStrategy>()), Layer(name)
 	{
-		m_shader = std::make_unique<Rendurr::Shader>("assets/shaders/vertex.glsl", "assets/shaders/frag.glsl");
+		const std::filesystem::path assetDir(EDITURR_ASSETS_DIR);
+		m_shader = std::make_shared<Rendurr::Shader>(assetDir / "shaders" / "vertex.glsl", assetDir / "shaders" / "frag.glsl");
 
 		std::vector<Rendurr::Vertex> vertices = {
 			// Front face
@@ -140,13 +144,11 @@ namespace Editurr
 		   20,22,21,22,20,23        // Bottom
 		};
 
-		auto vertexBuffer = std::make_unique<Rendurr::VertexBuffer>(vertices);
-		auto indexBuffer = std::make_unique<Rendurr::IndexBuffer>(indices);
+		Rendurr::Material material;
+		const std::filesystem::path wallTexturePath = assetDir / "textures" / "wall.jpg";
+		material.addTexture(wallTexturePath, Rendurr::TextureType::Ambient);
 
-		m_vertexArray = std::make_unique<Rendurr::VertexArray>();
-		m_vertexArray->addVertexBuffer(std::move(vertexBuffer));
-		m_vertexArray->setIndexBuffer(std::move(indexBuffer));
-		m_texture = std::make_unique<Rendurr::Texture>("assets/textures/wall.jpg");
+		m_mesh = std::make_unique<Rendurr::Mesh>(vertices, indices, material);
 
 		Rendurr::FramebufferSpecification spec;
 		spec.width = Rendurr::Application::getInstance().getWindow()->getWidth();
@@ -166,24 +168,17 @@ namespace Editurr
 		Rendurr::Renderer::setClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		Rendurr::Renderer::clear();
 
-		m_shader->use();
-
 		glm::mat4 viewMatrix = m_cameraController.getViewMatrix();
 		glm::mat4 projectionMatrix = m_cameraController.getProjectionMatrix();
 		Rendurr::CameraUniform cameraUniform{ viewMatrix, projectionMatrix };
 		m_shader->uploadUniformSet(cameraUniform);
 
-		m_texture->bind(0);
-
 		glm::mat4 transform = glm::mat4(1.0f);
 		transform = glm::translate(transform, { 0.0f, 0.0f, 0.0f });
 		transform = glm::rotate(transform, dt, glm::vec3(0.0f, 0.0f, 1.0f));
-		Rendurr::MeshUniforms uniform{ transform, 0 };
-		m_shader->uploadUniformSet(uniform);
 
-		m_vertexArray->bind();
-		Rendurr::Renderer::draw(m_vertexArray.get());
-		m_vertexArray->unbind();
+		// todo Unsafe
+		Rendurr::Renderer::draw(*m_mesh, transform, m_shader);
 		m_framebuffer->unbind();
 	}
 

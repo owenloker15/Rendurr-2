@@ -1,7 +1,16 @@
 #include "Renderer.hpp"
 
-#include <iostream>
 #include <glad/glad.h>
+
+namespace
+{
+	void drawIndexed(const Rendurr::VertexArray& vertexArray)
+	{
+		vertexArray.bind();
+		glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer()->getIndexCount(), GL_UNSIGNED_INT, nullptr);
+		vertexArray.unbind();
+	}
+}
 
 namespace Rendurr
 {
@@ -25,8 +34,21 @@ namespace Rendurr
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void Renderer::draw(const VertexArray* vertexArray)
+	void Renderer::draw(const Mesh& mesh, const glm::mat4& transform, const std::shared_ptr<Shader>& shader)
 	{
-		glDrawElements(GL_TRIANGLES, vertexArray->getIndexBuffer()->getIndexCount(), GL_UNSIGNED_INT, nullptr);
+		shader->use();
+
+		MeshTransformUniform transformUniform{ transform };
+		shader->uploadUniformSet(transformUniform);
+
+		for (const auto& texture : mesh.getMaterial().getTextures())
+		{
+			const auto nameToSlot = Texture::TextureTypeToString(texture.getType());
+			TextureUniform textureUniform{ nameToSlot.first, nameToSlot.second };
+			texture.bind(nameToSlot.second);
+			shader->uploadUniformSet(textureUniform);
+		}
+
+		drawIndexed(mesh.getVertexArray());
 	}
 }

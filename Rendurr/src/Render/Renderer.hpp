@@ -3,6 +3,9 @@
 #include <glm/vec4.hpp>
 
 #include "VertexArray.hpp"
+#include "Shader.hpp"
+
+#include <Scene/Mesh.hpp>
 
 namespace Rendurr
 {
@@ -14,6 +17,6 @@ namespace Rendurr
 		static void setViewport(float width, float height);
 		static void enableDepthTesting();
 
-		static void draw(const VertexArray* vertexArray);
+		static void draw(const Mesh& mesh, const glm::mat4& transform, const std::shared_ptr<Shader>& shader);
 	};
 }

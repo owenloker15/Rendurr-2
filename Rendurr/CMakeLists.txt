@@ -46,6 +46,10 @@ set(RENDURR_SOURCES
     src/Scene/CameraController.hpp
     src/Scene/CameraController.cpp
     src/Scene/IProjectionStrategy.hpp
+    src/Scene/Material.hpp
+    src/Scene/Material.cpp
+    src/Scene/Mesh.hpp
+    src/Scene/Mesh.cpp
     src/Scene/OrthographicProjectionStrategy.hpp
     src/Scene/OrthographicProjectionStrategy.cpp
 

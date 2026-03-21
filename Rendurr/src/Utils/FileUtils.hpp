@@ -11,17 +11,23 @@ namespace Rendurr
 	{
 		inline std::string readFileTextContents(const std::filesystem::path& filepath)
 		{
-			std::ifstream filestream(filepath, std::ios::in);
-			if (!filestream)
+			std::ifstream file(filepath.string(), std::ios::binary);
+			if (!file)
 			{
 				RND_CORE_ERROR("Failed to open file: {}", filepath.string());
 				return "";
 			}
+			
+			if (!file.is_open())
+			{
+				RND_CORE_ERROR("Stream failed to open: {}", filepath.string());
+				return "";
+			}
 
 			std::ostringstream buffer;
-			buffer << filestream.rdbuf();
+			buffer << file.rdbuf();
 
-			filestream.close();
+			file.close();
 
 			return buffer.str();
 		}

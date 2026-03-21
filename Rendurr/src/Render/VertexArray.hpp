@@ -10,6 +10,7 @@ namespace Rendurr
 	{
 	public:
 		VertexArray();
+		VertexArray(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 		~VertexArray();
 
 		void bind() const;
@@ -19,8 +20,8 @@ namespace Rendurr
 		void setIndexBuffer(std::unique_ptr<IndexBuffer> buffer);
 		const std::unique_ptr<IndexBuffer>& getIndexBuffer() const;
 	private:
-		uint32_t m_rendererId;
 		std::unique_ptr<VertexBuffer> m_vertexBuffer;
 		std::unique_ptr<IndexBuffer> m_indexBuffer;
+		uint32_t m_rendererId;
 	};
 }

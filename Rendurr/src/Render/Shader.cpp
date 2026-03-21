@@ -36,8 +36,8 @@ namespace Rendurr
 {
 	Shader::Shader(const std::filesystem::path& vertexFilePath, const std::filesystem::path& fragmentFilepath)
 	{
-		std::string vertexShaderContent = Utils::readFileTextContents(vertexFilePath);
-		std::string fragmentShaderContent = Utils::readFileTextContents(fragmentFilepath);
+		const std::string vertexShaderContent = Utils::readFileTextContents(vertexFilePath);
+		const std::string fragmentShaderContent = Utils::readFileTextContents(fragmentFilepath);
 
 		// Compile vertex and fragment shaders
 		uint32_t vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderContent);

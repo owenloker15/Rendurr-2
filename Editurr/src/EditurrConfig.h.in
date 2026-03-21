@@ -1,0 +1,2 @@
+#pragma once
+#define EDITURR_ASSETS_DIR "@EDITURR_ASSETS_SOURCE_DIR@"

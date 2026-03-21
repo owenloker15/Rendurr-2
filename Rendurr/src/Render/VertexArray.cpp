@@ -9,6 +9,13 @@ namespace Rendurr
 		glCreateVertexArrays(1, &m_rendererId);
 	}
 
+	VertexArray::VertexArray(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+	{
+		glCreateVertexArrays(1, &m_rendererId);
+		addVertexBuffer(std::make_unique<VertexBuffer>(vertices));
+		setIndexBuffer(std::make_unique<IndexBuffer>(indices));
+	}
+
 	VertexArray::~VertexArray()
 	{
 		glDeleteVertexArrays(1, &m_rendererId);

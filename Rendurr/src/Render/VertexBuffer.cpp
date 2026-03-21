@@ -1,5 +1,7 @@
 #include "VertexBuffer.hpp"
 
+#include <Scene/Mesh.hpp>
+
 #include <glad/glad.h>
 
 namespace Rendurr

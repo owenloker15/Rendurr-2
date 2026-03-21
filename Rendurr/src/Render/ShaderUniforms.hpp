@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <glm/mat4x4.hpp>
 
 namespace Rendurr
@@ -7,7 +8,7 @@ namespace Rendurr
 	class CameraUniform
 	{
 	public:
-		CameraUniform(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix);
+		CameraUniform(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
 		void upload(uint32_t shaderId) const;
 	private:
@@ -15,14 +16,24 @@ namespace Rendurr
 		glm::mat4 m_projectionMatrix;
 	};
 
-	class MeshUniforms
+	class MeshTransformUniform
 	{
 	public:
-		MeshUniforms(const glm::mat4& transform, uint32_t textureIndex);
+		MeshTransformUniform(glm::mat4 transform);
 
 		void upload(uint32_t shaderId) const;
 	private:
 		glm::mat4 m_transform;
-		uint32_t m_textureIndex;
+	};
+
+	class TextureUniform
+	{
+	public:
+		TextureUniform(std::string uniformName, uint32_t textureSlot);
+
+		void upload(uint32_t shaderId) const;
+	private:
+		std::string m_uniformName;
+		uint32_t m_textureSlot;
 	};
 }

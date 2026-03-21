@@ -20,7 +20,7 @@ namespace
 
 namespace Rendurr
 {
-	CameraUniform::CameraUniform(const glm::mat4& viewMatrix, const glm::mat4& projectionMatrix) : m_viewMatrix(viewMatrix), m_projectionMatrix(projectionMatrix) {}
+	CameraUniform::CameraUniform(glm::mat4 viewMatrix, glm::mat4 projectionMatrix) : m_viewMatrix(std::move(viewMatrix)), m_projectionMatrix(std::move(projectionMatrix)) {}
 
 	void CameraUniform::upload(uint32_t shaderId) const
 	{
@@ -31,14 +31,20 @@ namespace Rendurr
 		glUniformMatrix4fv(projectionMatrixUniformLocation, 1, GL_FALSE, glm::value_ptr(m_projectionMatrix));
 	}
 
-	MeshUniforms::MeshUniforms(const glm::mat4& transform, uint32_t textureIndex) : m_transform(transform), m_textureIndex(textureIndex) {}
+	MeshTransformUniform::MeshTransformUniform(glm::mat4 transform) : m_transform(std::move(transform)) {}
 
-	void MeshUniforms::upload(uint32_t shaderId) const
+	void MeshTransformUniform::upload(uint32_t shaderId) const
 	{
 		auto transformUniformLocation = getUniformLocation(shaderId, "u_Transform");
 		glUniformMatrix4fv(transformUniformLocation, 1, GL_FALSE, glm::value_ptr(m_transform));
-
-		auto textureUniformLocation = getUniformLocation(shaderId, "u_Texture");
-		glUniform1i(textureUniformLocation, m_textureIndex);
 	}
+
+	TextureUniform::TextureUniform(std::string uniformName, uint32_t textureSlot) : m_uniformName(std::move(uniformName)), m_textureSlot(textureSlot) {}
+
+	void TextureUniform::upload(uint32_t shaderId) const
+	{
+		auto textureNameUniformLocation = getUniformLocation(shaderId, m_uniformName.c_str());
+		glUniform1i(textureNameUniformLocation, m_textureSlot);
+	}
+
 }
