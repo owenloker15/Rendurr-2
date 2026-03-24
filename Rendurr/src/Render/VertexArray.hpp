@@ -13,6 +13,12 @@ namespace Rendurr
 		VertexArray(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 		~VertexArray();
 
+		VertexArray(const VertexArray&) = delete;
+		VertexArray& operator=(const VertexArray&) = delete;
+
+		VertexArray(VertexArray&&) = default;
+		VertexArray& operator=(VertexArray&&) = default;
+
 		void bind() const;
 		void unbind() const;
 

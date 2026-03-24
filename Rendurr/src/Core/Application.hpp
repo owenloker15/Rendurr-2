@@ -39,7 +39,7 @@ namespace Rendurr {
 		template<typename T>
 		T* getNativeWindow() const
 		{
-			const auto nativeWindow = m_window->getNativeWindow();
+			const auto nativeWindow = m_pWindow->getNativeWindow();
 			if (const auto castedWindow = static_cast<T*>(nativeWindow))
 			{
 				return castedWindow;
@@ -55,7 +55,7 @@ namespace Rendurr {
 
 		bool m_running = false;
 
-		std::shared_ptr<Window> m_window;
+		std::shared_ptr<Window> m_pWindow;
 		std::vector<std::unique_ptr<Layer>> m_layerStack;
 		std::chrono::time_point<std::chrono::high_resolution_clock> m_lastFrameTime;
 	};

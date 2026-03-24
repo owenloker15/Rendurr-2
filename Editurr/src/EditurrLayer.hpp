@@ -24,8 +24,7 @@ namespace Editurr
 		Rendurr::CameraController m_cameraController;
 		glm::vec2 m_viewportSize;
 
-		std::unique_ptr<Rendurr::Mesh> m_mesh;
-		std::shared_ptr<Rendurr::Shader> m_shader;
-		std::unique_ptr<Rendurr::Framebuffer> m_framebuffer;
+		std::shared_ptr<Rendurr::Shader> m_pShader;
+		std::unique_ptr<Rendurr::Framebuffer> m_pFramebuffer;
 	};
 }

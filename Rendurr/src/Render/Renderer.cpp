@@ -2,6 +2,9 @@
 
 #include <glad/glad.h>
 
+#include "glm/ext/matrix_transform.hpp"
+#include "Scene/Components.hpp"
+
 namespace
 {
 	void drawIndexed(const Rendurr::VertexArray& vertexArray)
@@ -9,6 +12,21 @@ namespace
 		vertexArray.bind();
 		glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer()->getIndexCount(), GL_UNSIGNED_INT, nullptr);
 		vertexArray.unbind();
+	}
+
+	void drawMesh(const Rendurr::Mesh& mesh, const std::shared_ptr<Rendurr::Shader>& pShader)
+	{
+		pShader->use();
+
+		for (const auto& texture : mesh.getMaterial().getTextures())
+		{
+			const auto nameToSlot = Rendurr::Texture::TextureTypeToString(texture.getType());
+			Rendurr::TextureUniform textureUniform{ nameToSlot.first, nameToSlot.second };
+			texture.bind(nameToSlot.second);
+			pShader->uploadUniformSet(textureUniform);
+		}
+
+		drawIndexed(mesh.getVertexArray());
 	}
 }
 
@@ -34,21 +52,32 @@ namespace Rendurr
 		glEnable(GL_DEPTH_TEST);
 	}
 
-	void Renderer::draw(const Mesh& mesh, const glm::mat4& transform, const std::shared_ptr<Shader>& shader)
+	void Renderer::drawScene(const std::shared_ptr<Scene>& pScene, const std::shared_ptr<Shader>& pShader)
 	{
-		shader->use();
+		pShader->use();
 
-		MeshTransformUniform transformUniform{ transform };
-		shader->uploadUniformSet(transformUniform);
+		pScene->forEachEntity([&pScene, &pShader](Entity entity)
+			{
+				if (pScene->hasComponent<TransformComponent>(entity))
+				{
+					const auto transformComponent = pScene->getComponent<TransformComponent>(entity);
+					glm::mat4 transform = glm::mat4(1.0f);
+					transform = glm::translate(transform, transformComponent->translation);
+					transform = glm::rotate(transform, glm::radians(transformComponent->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+					transform = glm::rotate(transform, glm::radians(transformComponent->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+					transform = glm::rotate(transform, glm::radians(transformComponent->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+					transform = glm::scale(transform, transformComponent->scale);
 
-		for (const auto& texture : mesh.getMaterial().getTextures())
-		{
-			const auto nameToSlot = Texture::TextureTypeToString(texture.getType());
-			TextureUniform textureUniform{ nameToSlot.first, nameToSlot.second };
-			texture.bind(nameToSlot.second);
-			shader->uploadUniformSet(textureUniform);
-		}
+					MeshTransformUniform transformUniform{ transform };
+					pShader->uploadUniformSet(transformUniform);
 
-		drawIndexed(mesh.getVertexArray());
+				}
+
+				if (pScene->hasComponent<MeshComponent>(entity))
+				{
+					const auto meshComponent = pScene->getComponent<MeshComponent>(entity);
+					drawMesh(meshComponent->mesh, pShader);
+				}
+			});
 	}
 }

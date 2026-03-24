@@ -45,6 +45,12 @@ set(RENDURR_SOURCES
     src/Scene/Camera.cpp
     src/Scene/CameraController.hpp
     src/Scene/CameraController.cpp
+    src/Scene/Components.hpp
+    src/Scene/ComponentPool.hpp
+    src/Scene/ECSManager.hpp
+    src/Scene/ECSManager.cpp
+    src/Scene/Entity.hpp
+    src/Scene/Entity.cpp
     src/Scene/IProjectionStrategy.hpp
     src/Scene/Material.hpp
     src/Scene/Material.cpp
@@ -52,6 +58,8 @@ set(RENDURR_SOURCES
     src/Scene/Mesh.cpp
     src/Scene/OrthographicProjectionStrategy.hpp
     src/Scene/OrthographicProjectionStrategy.cpp
+    src/Scene/Scene.hpp
+    src/Scene/Scene.cpp
 
     src/UI/UiLayer.hpp
     src/UI/UiLayer.cpp
@@ -112,5 +120,12 @@ target_link_libraries(Rendurr PRIVATE
     stb_image
 )
 
+# Compile Defs
+
 # Prevents glfw from including any opengl headers
 target_compile_definitions(Rendurr PUBLIC GLFW_INCLUDE_NONE)
+
+target_compile_definitions(Rendurr
+    PRIVATE
+        $<$<CONFIG:Debug>:RND_ENABLE_ASSERTS>
+)

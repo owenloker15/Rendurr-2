@@ -11,6 +11,9 @@
 
 #include <imgui.h>
 
+#include "Editurr.hpp"
+#include "Scene/Components.hpp"
+
 namespace
 {
 	void dockspaceBegin()
@@ -94,8 +97,10 @@ namespace Editurr
 {
 	EditurrLayer::EditurrLayer(std::string name) : m_cameraController(1280.0 / 720, 5.0, std::make_unique<Rendurr::OrthographicProjectionStrategy>()), Layer(name)
 	{
+		Editurr::getInstance().setActiveScene(Editurr::getInstance().createScene());
+
 		const std::filesystem::path assetDir(EDITURR_ASSETS_DIR);
-		m_shader = std::make_shared<Rendurr::Shader>(assetDir / "shaders" / "vertex.glsl", assetDir / "shaders" / "frag.glsl");
+		m_pShader = std::make_shared<Rendurr::Shader>(assetDir / "shaders" / "vertex.glsl", assetDir / "shaders" / "frag.glsl");
 
 		std::vector<Rendurr::Vertex> vertices = {
 			// Front face
@@ -143,18 +148,29 @@ namespace Editurr
 		   16,18,17,18,16,19,       // Top
 		   20,22,21,22,20,23        // Bottom
 		};
+		
+		std::shared_ptr<Rendurr::Scene> pActiveScene = Editurr::getInstance().getActiveScene();
+		pActiveScene->registerComponent<Rendurr::TransformComponent>();
+
+		Rendurr::Entity entity = pActiveScene->createEntity();
 
 		Rendurr::Material material;
 		const std::filesystem::path wallTexturePath = assetDir / "textures" / "wall.jpg";
 		material.addTexture(wallTexturePath, Rendurr::TextureType::Ambient);
 
-		m_mesh = std::make_unique<Rendurr::Mesh>(vertices, indices, material);
+		Rendurr::Mesh mesh(vertices, indices, material);
+
+		//Rendurr::MeshComponent meshComponent(std::move(mesh));
+		//pActiveScene->addComponent(entity, std::move(meshComponent));
+
+		Rendurr::TransformComponent transformComponent({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f });
+		pActiveScene->addComponent(entity, std::move(transformComponent));
 
 		Rendurr::FramebufferSpecification spec;
 		spec.width = Rendurr::Application::getInstance().getWindow()->getWidth();
 		spec.height = Rendurr::Application::getInstance().getWindow()->getHeight();
 		spec.m_colorAttachments = { {"color", Rendurr::ColorAttachmentFormat::RGBA8}, {"red", Rendurr::ColorAttachmentFormat::RGBA8} };
-		m_framebuffer = std::make_unique<Rendurr::Framebuffer>(spec);
+		m_pFramebuffer = std::make_unique<Rendurr::Framebuffer>(spec);
 	}
 
 	void EditurrLayer::onAttach()
@@ -163,7 +179,7 @@ namespace Editurr
 
 	void EditurrLayer::onUpdate(float dt)
 	{
-		m_framebuffer->bind();
+		m_pFramebuffer->bind();
 
 		Rendurr::Renderer::setClearColor({ 1.0f, 1.0f, 1.0f, 1.0f });
 		Rendurr::Renderer::clear();
@@ -171,15 +187,15 @@ namespace Editurr
 		glm::mat4 viewMatrix = m_cameraController.getViewMatrix();
 		glm::mat4 projectionMatrix = m_cameraController.getProjectionMatrix();
 		Rendurr::CameraUniform cameraUniform{ viewMatrix, projectionMatrix };
-		m_shader->uploadUniformSet(cameraUniform);
+		m_pShader->uploadUniformSet(cameraUniform);
 
 		glm::mat4 transform = glm::mat4(1.0f);
 		transform = glm::translate(transform, { 0.0f, 0.0f, 0.0f });
 		transform = glm::rotate(transform, dt, glm::vec3(0.0f, 0.0f, 1.0f));
 
 		// todo Unsafe
-		Rendurr::Renderer::draw(*m_mesh, transform, m_shader);
-		m_framebuffer->unbind();
+		Rendurr::Renderer::drawScene(Editurr::getInstance().getActiveScene(), m_pShader);
+		m_pFramebuffer->unbind();
 	}
 
 	void EditurrLayer::onUiRender()
@@ -207,7 +223,7 @@ namespace Editurr
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_viewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
-		uint32_t textureID = m_framebuffer->getColorAttachmentId("color");
+		uint32_t textureID = m_pFramebuffer->getColorAttachmentId("color");
 		ImGui::Image(
 			textureID,
 			ImVec2{ m_viewportSize.x, m_viewportSize.y },

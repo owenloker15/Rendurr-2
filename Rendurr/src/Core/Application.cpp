@@ -22,7 +22,7 @@ namespace Rendurr {
 		windowData.height = spec.height;
 		windowData.title = spec.title;
 
-		m_window = std::make_shared<Window>(windowData);
+		m_pWindow = std::make_shared<Window>(windowData);
 
 		EventPublisher::getInstance()->subscribe<WindowCloseEvent>(this, &Application::onWindowCloseEvent);
 
@@ -53,7 +53,7 @@ namespace Rendurr {
 			}
 			UiLayer::endFrame();
 
-			m_window->onUpdate();
+			m_pWindow->onUpdate();
 		}
 
 		m_running = false;
@@ -71,7 +71,7 @@ namespace Rendurr {
 
 	std::shared_ptr<Window> Application::getWindow() const
 	{
-		return m_window;
+		return m_pWindow;
 	}
 
 	bool Application::onWindowCloseEvent(WindowCloseEvent& event)

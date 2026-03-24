@@ -7,6 +7,8 @@
 
 #include <Scene/Mesh.hpp>
 
+#include "Scene/Scene.hpp"
+
 namespace Rendurr
 {
 	class Renderer
@@ -17,6 +19,6 @@ namespace Rendurr
 		static void setViewport(float width, float height);
 		static void enableDepthTesting();
 
-		static void draw(const Mesh& mesh, const glm::mat4& transform, const std::shared_ptr<Shader>& shader);
+		static void drawScene(const std::shared_ptr<Scene>& pScene, const std::shared_ptr<Shader>& pShader);
 	};
 }
