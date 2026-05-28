@@ -10,8 +10,8 @@ namespace Rendurr
 	class Mesh
 	{
 	public:
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
-		Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Material material);
+		Mesh(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices);
+		Mesh(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices, Material&& material);
 
 		Mesh(const Mesh&) = delete;
 		Mesh& operator=(const Mesh&) = delete;

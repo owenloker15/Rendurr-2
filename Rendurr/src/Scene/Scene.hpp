@@ -14,48 +14,29 @@ namespace Rendurr
 		uint32_t createEntity();
 
 		template <typename T>
-		bool registerComponent()
+		void addComponent(Entity e, T&& c)
 		{
-			return m_ecs.registerComponent<T>();
+			m_ecs.addComponent(e, std::forward<T>(c));
 		}
 
-		template<typename T>
-		void addComponent(Entity entity, T&& component)
+		const TransformComponent& getTransformComponent(Entity e)
 		{
-			return m_ecs.addComponent(entity, std::forward<T>(component));
+			return m_ecs.getTransformComponent(e);
+		}
+		const MeshComponent& getMeshComponent(Entity e)
+		{
+			return m_ecs.getMeshComponent(e);
 		}
 
-		template<typename T>
-		void removeComponent(Entity entity)
+		template <typename Func>
+		void forEachEntity(Func&& f)
 		{
-			return m_ecs.removeComponent<T>(entity);
-		}
-
-		template <typename T>
-		bool hasComponent(Entity entity) const
-		{
-			return m_ecs.hasComponent<T>(entity);
-		}
-
-		template <typename T>
-		[[nodiscard]] T* getComponent(Entity entity)
-		{
-			return m_ecs.getComponent<T>(entity);
-		}
-
-		template <typename T>
-		[[nodiscard]] const T* getComponent(Entity entity) const
-		{
-			return m_ecs.getComponent<T>(entity);
-		}
-
-		void forEachEntity(const std::function<void(const Entity&)>& func) const
-		{
-			for (const auto& entity : m_ecs.getEntities())
+			for (size_t i = 0; i < m_ecs.m_nextEntityId; i++)
 			{
-				func(entity);
+				f(i);
 			}
 		}
+
 	private:
 		ECSManager m_ecs;
 	};

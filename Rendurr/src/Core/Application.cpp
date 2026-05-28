@@ -28,6 +28,7 @@ namespace Rendurr {
 
 		pushLayer<UiLayer>();
 
+		Renderer::enableDebug();
 		Renderer::enableDepthTesting();
 	}
 

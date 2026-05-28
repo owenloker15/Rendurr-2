@@ -30,6 +30,12 @@ namespace Rendurr
 	{
 		explicit MeshComponent(Mesh&& mesh) : mesh(std::move(mesh)) {}
 
+		MeshComponent(const MeshComponent&) = delete;
+		MeshComponent& operator=(const MeshComponent&) = delete;
+
+		MeshComponent(MeshComponent&&) = default;
+		MeshComponent& operator=(MeshComponent&&) = default;
+
 		Mesh mesh;
 	};
 }

@@ -16,8 +16,8 @@ namespace Editurr
 
 		static Editurr& getInstance();
 
-		static Rendurr::Scene createScene();
-		void setActiveScene(Rendurr::Scene scene);
+		static std::shared_ptr<Rendurr::Scene> createScene();
+		void setActiveScene(std::shared_ptr<Rendurr::Scene> pScene);
 		std::shared_ptr<Rendurr::Scene> getActiveScene() const;
 
 	private:

@@ -9,25 +9,23 @@ namespace Rendurr
 	class VertexArray
 	{
 	public:
-		VertexArray();
-		VertexArray(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
-		~VertexArray();
-
-		VertexArray(const VertexArray&) = delete;
-		VertexArray& operator=(const VertexArray&) = delete;
+		VertexArray(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices);
+		~VertexArray() = default;
 
 		VertexArray(VertexArray&&) = default;
 		VertexArray& operator=(VertexArray&&) = default;
 
+		VertexArray(const VertexArray&) = delete;
+		VertexArray& operator=(const VertexArray&) = delete;
+
 		void bind() const;
 		void unbind() const;
+		void release();
 
-		void addVertexBuffer(std::unique_ptr<VertexBuffer> buffer);
-		void setIndexBuffer(std::unique_ptr<IndexBuffer> buffer);
-		const std::unique_ptr<IndexBuffer>& getIndexBuffer() const;
+		const IndexBuffer& getIndexBuffer() const;
 	private:
-		std::unique_ptr<VertexBuffer> m_vertexBuffer;
-		std::unique_ptr<IndexBuffer> m_indexBuffer;
+		VertexBuffer m_vertexBuffer;
+		IndexBuffer m_indexBuffer;
 		uint32_t m_rendererId;
 	};
 }

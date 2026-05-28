@@ -16,11 +16,10 @@ namespace Rendurr
 	class VertexBuffer
 	{
 	public:
-		VertexBuffer(const std::vector<Vertex>& vertices);
-		~VertexBuffer();
+		VertexBuffer(std::vector<Vertex>&& vertices);
+		~VertexBuffer() = default;
 
-		void bind() const;
-		void unbind() const;
+		void release();
 
 		uint32_t getRendererId() const;
 	private:

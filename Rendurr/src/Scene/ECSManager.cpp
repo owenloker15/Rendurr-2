@@ -4,17 +4,26 @@ namespace Rendurr
 {
 	Entity ECSManager::createEntity()
 	{
-		const uint32_t id = m_entities.size();
-		if (m_entities.contains(id))
-		{
-			RND_CORE_ERROR("Entity with id already exists! This should not be possible");
-		}
-		m_entities.insert(id);
-		return id;
+		return m_nextEntityId++;
 	}
 
-	const std::unordered_set<Entity>& ECSManager::getEntities() const
+	void ECSManager::addComponent(Entity e, TransformComponent&& c)
 	{
-		return m_entities;
+		m_transforms.emplace(e, std::move(c));
+	}
+
+	void ECSManager::addComponent(Entity e, MeshComponent&& c)
+	{
+		m_meshs.emplace(e, std::move(c));
+	}
+
+	const TransformComponent& ECSManager::getTransformComponent(Entity e)
+	{
+		return m_transforms.at(e);
+	}
+
+	const MeshComponent& ECSManager::getMeshComponent(Entity e)
+	{
+		return m_meshs.at(e);
 	}
 }

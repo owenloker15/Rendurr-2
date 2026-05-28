@@ -57,18 +57,6 @@ namespace Rendurr
 		unbind();
 	}
 
-	Framebuffer::~Framebuffer()
-	{
-		glDeleteFramebuffers(1, &m_rendererId);
-
-		for (auto& [key, texture] : m_colorAttachments)
-		{
-			glDeleteTextures(1, &texture);
-		}
-
-		glDeleteRenderbuffers(1, &m_depthAttachment);
-	}
-
 	void Framebuffer::bind() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
@@ -78,6 +66,18 @@ namespace Rendurr
 	void Framebuffer::unbind() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void Framebuffer::release()
+	{
+		glDeleteFramebuffers(1, &m_rendererId);
+
+		for (auto& [key, texture] : m_colorAttachments)
+		{
+			glDeleteTextures(1, &texture);
+		}
+
+		glDeleteRenderbuffers(1, &m_depthAttachment);
 	}
 
 	uint32_t Framebuffer::getColorAttachmentId(const std::string& colorAttachmentKey) const

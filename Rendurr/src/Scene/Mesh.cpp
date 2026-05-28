@@ -2,9 +2,9 @@
 
 namespace Rendurr
 {
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices) : m_vertexArray(vertices, indices) {}
+	Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices) : m_vertexArray(std::move(vertices), std::move(indices)) {}
 
-	Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, Material material) : m_vertexArray(vertices, indices), m_material(std::move(material)) {}
+	Mesh::Mesh(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices, Material&& material) : m_vertexArray(std::move(vertices), std::move(indices)), m_material(std::move(material)) {}
 
 	const VertexArray& Mesh::getVertexArray() const
 	{

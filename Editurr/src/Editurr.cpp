@@ -8,14 +8,14 @@ namespace Editurr
 		return instance;
 	}
 
-	Rendurr::Scene Editurr::createScene()
+	std::shared_ptr<Rendurr::Scene> Editurr::createScene()
 	{
-		return Rendurr::Scene();
+		return std::make_shared<Rendurr::Scene>();
 	}
 
-	void Editurr::setActiveScene(Rendurr::Scene scene)
+	void Editurr::setActiveScene(std::shared_ptr<Rendurr::Scene> pScene)
 	{
-		//m_pActiveScene = std::make_shared<Rendurr::Scene>(std::move(scene));
+		m_pActiveScene = pScene;
 	}
 
 	std::shared_ptr<Rendurr::Scene> Editurr::getActiveScene() const

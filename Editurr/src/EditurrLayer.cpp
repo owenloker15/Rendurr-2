@@ -150,7 +150,6 @@ namespace Editurr
 		};
 		
 		std::shared_ptr<Rendurr::Scene> pActiveScene = Editurr::getInstance().getActiveScene();
-		pActiveScene->registerComponent<Rendurr::TransformComponent>();
 
 		Rendurr::Entity entity = pActiveScene->createEntity();
 
@@ -158,10 +157,10 @@ namespace Editurr
 		const std::filesystem::path wallTexturePath = assetDir / "textures" / "wall.jpg";
 		material.addTexture(wallTexturePath, Rendurr::TextureType::Ambient);
 
-		Rendurr::Mesh mesh(vertices, indices, material);
+		Rendurr::Mesh mesh(std::move(vertices), std::move(indices), std::move(material));
 
-		//Rendurr::MeshComponent meshComponent(std::move(mesh));
-		//pActiveScene->addComponent(entity, std::move(meshComponent));
+		Rendurr::MeshComponent meshComponent(std::move(mesh));
+		pActiveScene->addComponent(entity, std::move(meshComponent));
 
 		Rendurr::TransformComponent transformComponent({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f });
 		pActiveScene->addComponent(entity, std::move(transformComponent));

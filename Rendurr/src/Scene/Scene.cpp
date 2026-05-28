@@ -6,4 +6,5 @@ namespace Rendurr
 	{
 		return m_ecs.createEntity();
 	}
+
 }
