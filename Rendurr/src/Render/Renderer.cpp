@@ -2,6 +2,7 @@
 
 #include <glad/glad.h>
 
+#include "IndexBuffer.hpp"
 #include "glm/ext/matrix_transform.hpp"
 #include "Scene/Components.hpp"
 
@@ -10,7 +11,7 @@ namespace
 	void drawIndexed(const Rendurr::VertexArray& vertexArray)
 	{
 		vertexArray.bind();
-		glDrawElements(GL_TRIANGLES, vertexArray.getIndexBuffer()->getIndexCount(), GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, Rendurr::get_number_of_indices(vertexArray.getIndexBufferId()), GL_UNSIGNED_INT, nullptr);
 		vertexArray.unbind();
 	}
 
@@ -56,28 +57,25 @@ namespace Rendurr
 	{
 		pShader->use();
 
-		pScene->forEachEntity([&pScene, &pShader](Entity entity)
-			{
-				if (pScene->hasComponent<TransformComponent>(entity))
-				{
-					const auto transformComponent = pScene->getComponent<TransformComponent>(entity);
-					glm::mat4 transform = glm::mat4(1.0f);
-					transform = glm::translate(transform, transformComponent->translation);
-					transform = glm::rotate(transform, glm::radians(transformComponent->rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
-					transform = glm::rotate(transform, glm::radians(transformComponent->rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
-					transform = glm::rotate(transform, glm::radians(transformComponent->rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
-					transform = glm::scale(transform, transformComponent->scale);
+		const auto& transforms = pScene->ecs.transforms.get_values();
+		for (const auto& transformComponent : transforms)
+		{
+			glm::mat4 transformOut = glm::mat4(1.0f);
+			transformOut = glm::translate(transformOut, transformComponent.translation);
+			transformOut = glm::rotate(transformOut, glm::radians(transformComponent.rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+			transformOut = glm::rotate(transformOut, glm::radians(transformComponent.rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+			transformOut = glm::rotate(transformOut, glm::radians(transformComponent.rotation.z), glm::vec3(0.0f, 0.0f, 1.0f));
+			transformOut = glm::scale(transformOut, transformComponent.scale);
 
-					MeshTransformUniform transformUniform{ transform };
-					pShader->uploadUniformSet(transformUniform);
+			MeshTransformUniform transformUniform{ transformOut };
+			pShader->uploadUniformSet(transformUniform);
+		}
 
-				}
+		const auto& meshs = pScene->ecs.meshs.get_values();
+		for (const auto& meshComponent : meshs)
+		{
+			drawMesh(meshComponent.mesh, pShader);
+		}
 
-				if (pScene->hasComponent<MeshComponent>(entity))
-				{
-					const auto meshComponent = pScene->getComponent<MeshComponent>(entity);
-					drawMesh(meshComponent->mesh, pShader);
-				}
-			});
 	}
 }

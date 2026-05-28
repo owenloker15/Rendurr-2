@@ -66,6 +66,8 @@ set(RENDURR_SOURCES
 
     src/Utils/FileUtils.hpp
     src/Utils/Timer.hpp
+    src/Utils/SparseSet.h
+    src/Utils/SparseSet.cpp
 )
 
 # Create static library

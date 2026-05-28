@@ -4,33 +4,31 @@
 
 namespace Rendurr
 {
-	IndexBuffer::IndexBuffer(const std::vector<uint32_t>& indices)
+	uint32_t create_index_buffer(const std::vector<uint32_t>& indices)
 	{
-		m_indexCount = indices.size();
-		glCreateBuffers(1, &m_rendererId);
-		glNamedBufferData(m_rendererId, sizeof(uint32_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
+		uint32_t rendererId;
+
+		glCreateBuffers(1, &rendererId);
+		glNamedBufferData(rendererId, sizeof(uint32_t) * indices.size(), indices.data(), GL_STATIC_DRAW);
+		return rendererId;
 	}
 
-	IndexBuffer::~IndexBuffer()
+	void destroy_index_buffer(uint32_t rendererId)
 	{
-		glDeleteBuffers(1, &m_rendererId);
+		glDeleteBuffers(1, &rendererId);
 	}
 
-	void IndexBuffer::bind() const
+	uint32_t get_number_of_indices(uint32_t rendererId)
 	{
-	}
+		GLint sizeInBytes = 0;
 
-	void IndexBuffer::unbind() const
-	{
-	}
+		glGetNamedBufferParameteriv(rendererId,
+									GL_BUFFER_SIZE,
+									&sizeInBytes);
 
-	uint32_t IndexBuffer::getRendererId() const
-	{
-		return m_rendererId;
-	}
-
-	uint32_t IndexBuffer::getIndexCount() const
-	{
-		return m_indexCount;
+		uint32_t indexCount = static_cast<uint32_t>(
+			sizeInBytes / sizeof(uint32_t)
+		);
+		return indexCount;
 	}
 }

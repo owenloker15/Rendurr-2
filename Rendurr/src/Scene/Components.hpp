@@ -28,7 +28,7 @@ namespace Rendurr
 
 	struct MeshComponent
 	{
-		explicit MeshComponent(Mesh&& mesh) : mesh(std::move(mesh)) {}
+		explicit MeshComponent(Mesh mesh) : mesh(std::move(mesh)) {}
 
 		Mesh mesh;
 	};

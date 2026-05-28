@@ -6,9 +6,9 @@
 
 namespace Rendurr
 {
-
-	VertexBuffer::VertexBuffer(const std::vector<Vertex>& vertices)
+	uint32_t create_vertex_buffer(const std::vector<Vertex>& vertices)
 	{
+		uint32_t rendererId;
 		/*
 		// Create a buffer object
 		glGenBuffers(1, &m_rendererId);
@@ -23,27 +23,23 @@ namespace Rendurr
 		// glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, )
 		*/
 
-		glCreateBuffers(1, &m_rendererId);
-		glNamedBufferData(m_rendererId, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+		glCreateBuffers(1, &rendererId);
+		glNamedBufferData(rendererId, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
+		return rendererId;
 	}
 
-	VertexBuffer::~VertexBuffer()
+	void destroy_vertex_buffer(uint32_t rendererId)
 	{
-		glDeleteBuffers(1, &m_rendererId);
+		glDeleteBuffers(1, &rendererId);
 	}
 
-	void VertexBuffer::bind() const
+	void bind_vertex_buffer(uint32_t rendererId)
 	{
-		// glBindBuffer(GL_ARRAY_BUFFER, m_rendererId);
+		glBindBuffer(GL_ARRAY_BUFFER, rendererId);
 	}
 
-	void VertexBuffer::unbind() const
+	void unbind_vertex_buffer()
 	{
-		// glBindBuffer(GL_ARRAY_BUFFER, 0);
-	}
-
-	uint32_t VertexBuffer::getRendererId() const
-	{
-		return m_rendererId;
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 }

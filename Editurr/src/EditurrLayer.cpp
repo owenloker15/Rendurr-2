@@ -150,9 +150,8 @@ namespace Editurr
 		};
 		
 		std::shared_ptr<Rendurr::Scene> pActiveScene = Editurr::getInstance().getActiveScene();
-		pActiveScene->registerComponent<Rendurr::TransformComponent>();
 
-		Rendurr::Entity entity = pActiveScene->createEntity();
+		Rendurr::EntityHandle entity = create_entity(pActiveScene->ecs);
 
 		Rendurr::Material material;
 		const std::filesystem::path wallTexturePath = assetDir / "textures" / "wall.jpg";
@@ -160,11 +159,11 @@ namespace Editurr
 
 		Rendurr::Mesh mesh(vertices, indices, material);
 
-		//Rendurr::MeshComponent meshComponent(std::move(mesh));
-		//pActiveScene->addComponent(entity, std::move(meshComponent));
+		Rendurr::MeshComponent meshComponent(std::move(mesh));
+		Rendurr::add_component(pActiveScene->ecs, entity, std::move(meshComponent));
 
 		Rendurr::TransformComponent transformComponent({ 0.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f, 1.0f });
-		pActiveScene->addComponent(entity, std::move(transformComponent));
+		Rendurr::add_component(pActiveScene->ecs, entity, transformComponent);
 
 		Rendurr::FramebufferSpecification spec;
 		spec.width = Rendurr::Application::getInstance().getWindow()->getWidth();

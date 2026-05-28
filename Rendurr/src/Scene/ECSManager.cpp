@@ -2,19 +2,13 @@
 
 namespace Rendurr
 {
-	Entity ECSManager::createEntity()
+	EntityHandle create_entity(EcsManager& ecs)
 	{
-		const uint32_t id = m_entities.size();
-		if (m_entities.contains(id))
-		{
-			RND_CORE_ERROR("Entity with id already exists! This should not be possible");
-		}
-		m_entities.insert(id);
-		return id;
+		return ecs.nextEntityId++;
 	}
 
-	const std::unordered_set<Entity>& ECSManager::getEntities() const
+	void destroy_entity(EcsManager& ecs, EntityHandle e)
 	{
-		return m_entities;
+		ecs.transforms.remove(e);
 	}
 }

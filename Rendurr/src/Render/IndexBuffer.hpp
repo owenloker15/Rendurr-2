@@ -4,19 +4,7 @@
 
 namespace Rendurr
 {
-	class IndexBuffer
-	{
-	public:
-		IndexBuffer(const std::vector<uint32_t>& indices);
-		~IndexBuffer();
-
-		void bind() const;
-		void unbind() const;
-
-		uint32_t getRendererId() const;
-		uint32_t getIndexCount() const;
-	private:
-		uint32_t m_rendererId;
-		uint32_t m_indexCount;
-	};
+	uint32_t create_index_buffer(const std::vector<uint32_t>& indices);
+	void destroy_index_buffer(uint32_t rendererId);
+	uint32_t get_number_of_indices(uint32_t rendererId);
 }

@@ -1,19 +1,17 @@
 #include "VertexArray.hpp"
+#include "IndexBuffer.hpp"
 
 #include <glad/glad.h>
 
 namespace Rendurr
 {
-	VertexArray::VertexArray()
-	{
-		glCreateVertexArrays(1, &m_rendererId);
-	}
-
 	VertexArray::VertexArray(const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
 	{
 		glCreateVertexArrays(1, &m_rendererId);
-		addVertexBuffer(std::make_unique<VertexBuffer>(vertices));
-		setIndexBuffer(std::make_unique<IndexBuffer>(indices));
+
+		setVertexBuffer(create_vertex_buffer(vertices));
+		setIndexBuffer(create_index_buffer(indices));
+
 	}
 
 	VertexArray::~VertexArray()
@@ -31,10 +29,10 @@ namespace Rendurr
 		glBindVertexArray(0);
 	}
 
-	void VertexArray::addVertexBuffer(std::unique_ptr<VertexBuffer> buffer)
+	void VertexArray::setVertexBuffer(uint32_t id)
 	{
-		m_vertexBuffer = std::move(buffer);
-		glVertexArrayVertexBuffer(m_rendererId, 0, m_vertexBuffer->getRendererId(), 0, sizeof(Vertex));
+		m_vertexBufferId = id;
+		glVertexArrayVertexBuffer(m_rendererId, 0, m_vertexBufferId, 0, sizeof(Vertex));
 
 		glEnableVertexArrayAttrib(m_rendererId, 0); // Position
 		glEnableVertexArrayAttrib(m_rendererId, 1); // Normals
@@ -49,14 +47,14 @@ namespace Rendurr
 		glVertexArrayAttribBinding(m_rendererId, 2, 0);
 	}
 
-	void VertexArray::setIndexBuffer(std::unique_ptr<IndexBuffer> buffer)
+	void VertexArray::setIndexBuffer(uint32_t id)
 	{
-		m_indexBuffer = std::move(buffer);
-		glVertexArrayElementBuffer(m_rendererId, m_indexBuffer->getRendererId());
+		m_indexBufferId = id;
+		glVertexArrayElementBuffer(m_rendererId, m_indexBufferId);
 	}
 
-	const std::unique_ptr<IndexBuffer>& VertexArray::getIndexBuffer() const
+	uint32_t VertexArray::getIndexBufferId() const
 	{
-		return m_indexBuffer;
+		return m_indexBufferId;
 	}
 }
