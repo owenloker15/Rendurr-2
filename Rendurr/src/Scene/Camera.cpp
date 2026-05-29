@@ -6,5 +6,4 @@
 #include "glm/ext/matrix_clip_space.hpp"
 
 namespace Rendurr
-{
-}
+{}

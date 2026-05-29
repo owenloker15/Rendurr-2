@@ -4,21 +4,25 @@
 
 namespace Rendurr
 {
-	
-	class Layer
-	{
-	public:
-		Layer(const std::string& name = "Layer") : m_Name(name) {}
-		virtual ~Layer() = default;
 
-		virtual void onAttach() {}
-		virtual void onDetach() {}
+    class Layer
+    {
+    public:
+        Layer(const std::string& name = "Layer") : m_Name(name) {}
 
-		virtual void onUpdate(float dt) {}
-		virtual void onEvent(Event& event) {}
-		virtual void onUiRender() {}
+        virtual ~Layer() = default;
 
-	private:
-		std::string m_Name;
-	};
-}
+        virtual void onAttach() {}
+
+        virtual void onDetach() {}
+
+        virtual void onUpdate(float dt) {}
+
+        virtual void onEvent(Event& event) {}
+
+        virtual void onUiRender() {}
+
+    private:
+        std::string m_Name;
+    };
+} // namespace Rendurr

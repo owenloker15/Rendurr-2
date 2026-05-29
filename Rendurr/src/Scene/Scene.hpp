@@ -1,43 +1,43 @@
 #pragma once
 
-#include "ECSManager.hpp"
-
 #include <cstdint>
+
+#include "ECSManager.hpp"
 
 namespace Rendurr
 {
-	class Scene
-	{
-	public:
-		Scene() = default;
+    class Scene
+    {
+    public:
+        Scene() = default;
 
-		uint32_t createEntity();
+        uint32_t createEntity();
 
-		template <typename T>
-		void addComponent(Entity e, T&& c)
-		{
-			m_ecs.addComponent(e, std::forward<T>(c));
-		}
+        template <typename T>
+        void addComponent(Entity e, T&& c)
+        {
+            m_ecs.addComponent(e, std::forward<T>(c));
+        }
 
-		const TransformComponent& getTransformComponent(Entity e)
-		{
-			return m_ecs.getTransformComponent(e);
-		}
-		const MeshComponent& getMeshComponent(Entity e)
-		{
-			return m_ecs.getMeshComponent(e);
-		}
+        const TransformComponent& getTransformComponent(Entity e)
+        {
+            return m_ecs.getTransformComponent(e);
+        }
 
-		template <typename Func>
-		void forEachEntity(Func&& f)
-		{
-			for (size_t i = 0; i < m_ecs.m_nextEntityId; i++)
-			{
-				f(i);
-			}
-		}
+        const MeshComponent& getMeshComponent(Entity e)
+        {
+            return m_ecs.getMeshComponent(e);
+        }
 
-	private:
-		ECSManager m_ecs;
-	};
-}
+        template <typename Func>
+        void forEachEntity(Func&& f)
+        {
+            for (size_t i = 0; i < m_ecs.m_nextEntityId; i++) {
+                f(i);
+            }
+        }
+
+    private:
+        ECSManager m_ecs;
+    };
+} // namespace Rendurr

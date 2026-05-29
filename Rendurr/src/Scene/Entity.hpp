@@ -6,5 +6,5 @@ namespace Rendurr
 {
 #define MAX_ENTITIES 1024
 
-	typedef uint32_t Entity;
-}
+    typedef uint32_t Entity;
+} // namespace Rendurr

@@ -1,43 +1,42 @@
 #pragma once
 
-#include "Events/Event.hpp"
-
 #include <GLFW/glfw3.h>
-
 #include <functional>
 #include <memory>
 #include <string>
 
+#include "Events/Event.hpp"
 #include "Render/RenderContext.hpp"
 
 namespace Rendurr
 {
-	struct WindowData
-	{
-		uint32_t width = 0;
-		uint32_t height = 0;
-		std::string title;
-	};
+    struct WindowData
+    {
+        uint32_t width = 0;
+        uint32_t height = 0;
+        std::string title;
+    };
 
-	class Window
-	{
-	public:
-		Window(const WindowData& windowData);
-		~Window();
+    class Window
+    {
+    public:
+        Window(const WindowData& windowData);
+        ~Window();
 
-		uint32_t getWidth() const;
-		uint32_t getHeight() const;
+        uint32_t getWidth() const;
+        uint32_t getHeight() const;
 
-		void onUpdate();
+        void onUpdate();
 
-		GLFWwindow* getNativeWindow() const;
+        GLFWwindow* getNativeWindow() const;
 
-	private:
-		void setupEventCallbacks();
-	private:
-		GLFWwindow* m_window;
-		WindowData m_data;
+    private:
+        void setupEventCallbacks();
 
-		std::unique_ptr<RenderContext> m_renderContext;
-	};
-}
+    private:
+        GLFWwindow* m_window;
+        WindowData m_data;
+
+        std::unique_ptr<RenderContext> m_renderContext;
+    };
+} // namespace Rendurr

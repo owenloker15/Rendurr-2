@@ -4,14 +4,15 @@
 
 namespace Rendurr
 {
-	class RenderContext
-	{
-	public:
-		RenderContext(GLFWwindow* window);
+    class RenderContext
+    {
+    public:
+        RenderContext(GLFWwindow* window);
 
-		void init();
-		void swapBuffers();
-	private:
-		GLFWwindow* m_window;
-	};
-}
+        void init();
+        void swapBuffers();
+
+    private:
+        GLFWwindow* m_window;
+    };
+} // namespace Rendurr

@@ -1,201 +1,271 @@
 #pragma once
 
-#include "Core/Input.hpp"
-
 #include <string>
 #include <typeinfo>
 
+#include "Core/Input.hpp"
+
 namespace Rendurr
 {
-#define EVENT_TYPE(NAME) \
-	static std::string getStaticType() \
-	{ \
- return #NAME; \
-} \
- \
-    std::string getType() const override \
-    { \
-        return getStaticType(); \
+#define EVENT_TYPE(NAME)                                                                           \
+    static std::string getStaticType()                                                             \
+    {                                                                                              \
+        return #NAME;                                                                              \
+    }                                                                                              \
+                                                                                                   \
+    std::string getType() const override                                                           \
+    {                                                                                              \
+        return getStaticType();                                                                    \
     }
 
-	class Event
-	{
-	public:
-		virtual ~Event() = default;
+    class Event
+    {
+    public:
+        virtual ~Event() = default;
 
-		virtual std::string toString() const = 0;
+        virtual std::string toString() const = 0;
 
-		virtual std::string getType() const = 0;
+        virtual std::string getType() const = 0;
 
-		bool handled = false;
-	};
+        bool handled = false;
+    };
 
-	class WindowCloseEvent : public Event
-	{
-	public:
-		WindowCloseEvent() {}
+    class WindowCloseEvent : public Event
+    {
+    public:
+        WindowCloseEvent() {}
 
-		std::string toString() const override
-		{
-			return "WindowCloseEvent";
-		}
+        std::string toString() const override
+        {
+            return "WindowCloseEvent";
+        }
 
-		EVENT_TYPE(WindowCloseEvent);
+        EVENT_TYPE(WindowCloseEvent);
+    };
 
-	};
+    class WindowResizeEvent : public Event
+    {
+    public:
+        WindowResizeEvent(float width, float height) : m_width(width), m_height(height) {}
 
-	class WindowResizeEvent : public Event
-	{
-	public:
-		WindowResizeEvent(float width, float height) : m_width(width), m_height(height) {}
+        std::string toString() const override
+        {
+            return "WindowResizeEvent-> Width: " + std::to_string(m_width) +
+                   ", Height: " + std::to_string(m_height);
+        }
 
-		std::string toString() const override
-		{
-			return "WindowResizeEvent-> Width: " + std::to_string(m_width) + ", Height: " + std::to_string(m_height);
-		}
+        void setWidth(float width)
+        {
+            m_width = width;
+        }
 
-		void setWidth(float width) { m_width = width; }
-		float getWidth() const { return m_width; }
+        float getWidth() const
+        {
+            return m_width;
+        }
 
-		void setHeight(float height) { m_height = height; }
-		float getHeight() const { return m_height; }
+        void setHeight(float height)
+        {
+            m_height = height;
+        }
 
-		EVENT_TYPE(WindowResizeEvent);
+        float getHeight() const
+        {
+            return m_height;
+        }
 
-	private:
-		float m_width;
-		float m_height;
-	};
+        EVENT_TYPE(WindowResizeEvent);
 
-	class WindowMoveEvent : public Event
-	{
-	public:
-		WindowMoveEvent(float xPos, float yPos) : m_xPos(xPos), m_yPos(yPos) {}
+    private:
+        float m_width;
+        float m_height;
+    };
 
-		std::string toString() const override
-		{
-			return "WindowMoveEvent-> X-Position: " + std::to_string(m_xPos) + ", Y-Position: " + std::to_string(m_yPos);
-		}
+    class WindowMoveEvent : public Event
+    {
+    public:
+        WindowMoveEvent(float xPos, float yPos) : m_xPos(xPos), m_yPos(yPos) {}
 
-		void setXPos(float xPos) { m_xPos = xPos; }
-		float getXPos() const { return m_xPos; }
+        std::string toString() const override
+        {
+            return "WindowMoveEvent-> X-Position: " + std::to_string(m_xPos) +
+                   ", Y-Position: " + std::to_string(m_yPos);
+        }
 
-		void setYPos(float xPos) { m_yPos = xPos; }
-		float getYPos() const { return m_yPos; }
+        void setXPos(float xPos)
+        {
+            m_xPos = xPos;
+        }
 
-		EVENT_TYPE(WindowMoveEvent);
+        float getXPos() const
+        {
+            return m_xPos;
+        }
 
-	private:
-		float m_xPos;
-		float m_yPos;
-	};
+        void setYPos(float xPos)
+        {
+            m_yPos = xPos;
+        }
 
-	class MouseMoveEvent : public Event
-	{
-	public:
-		MouseMoveEvent(float xPos, float yPos) : m_xPos(xPos), m_yPos(yPos) {}
+        float getYPos() const
+        {
+            return m_yPos;
+        }
 
-		std::string toString() const override
-		{
-			return "MouseMoveEvent-> X-Position: " + std::to_string(m_xPos) + ", Y-Position: " + std::to_string(m_yPos);
-		}
+        EVENT_TYPE(WindowMoveEvent);
 
-		void setXPos(float xPos) { m_xPos = xPos; }
-		float getXPos() const { return m_xPos; }
+    private:
+        float m_xPos;
+        float m_yPos;
+    };
 
-		void setYPos(float yPos) { m_yPos = yPos; }
-		float getYPos() const { return m_yPos; }
+    class MouseMoveEvent : public Event
+    {
+    public:
+        MouseMoveEvent(float xPos, float yPos) : m_xPos(xPos), m_yPos(yPos) {}
 
-		EVENT_TYPE(MouseMoveEvent);
+        std::string toString() const override
+        {
+            return "MouseMoveEvent-> X-Position: " + std::to_string(m_xPos) +
+                   ", Y-Position: " + std::to_string(m_yPos);
+        }
 
-	private:
-		float m_xPos;
-		float m_yPos;
-	};
+        void setXPos(float xPos)
+        {
+            m_xPos = xPos;
+        }
 
-	class MousePressEvent : public Event
-	{
-	public:
-		MousePressEvent(MouseCode button) : m_button(button) {}
+        float getXPos() const
+        {
+            return m_xPos;
+        }
 
-		std::string toString() const override
-		{
-			return "MousePressEvent";
-		}
+        void setYPos(float yPos)
+        {
+            m_yPos = yPos;
+        }
 
-		void setButton(MouseCode button) { m_button = button; }
-		MouseCode getButton() const { return m_button; }
+        float getYPos() const
+        {
+            return m_yPos;
+        }
 
-		EVENT_TYPE(MousePressEvent);
+        EVENT_TYPE(MouseMoveEvent);
 
+    private:
+        float m_xPos;
+        float m_yPos;
+    };
 
-	private:
-		MouseCode m_button;
-	};
+    class MousePressEvent : public Event
+    {
+    public:
+        MousePressEvent(MouseCode button) : m_button(button) {}
 
-	class MouseReleaseEvent : public Event
-	{
-	public:
-		MouseReleaseEvent(MouseCode button) : m_button(button) {}
+        std::string toString() const override
+        {
+            return "MousePressEvent";
+        }
 
-		std::string toString() const override
-		{
-			return "MouseReleaseEvent";
-		}
+        void setButton(MouseCode button)
+        {
+            m_button = button;
+        }
 
-		void setButton(MouseCode button) { m_button = button; }
-		MouseCode getButton() const { return m_button; }
+        MouseCode getButton() const
+        {
+            return m_button;
+        }
 
-		EVENT_TYPE(MouseReleaseEvent);
+        EVENT_TYPE(MousePressEvent);
 
-	private:
-		MouseCode m_button;
-	};
+    private:
+        MouseCode m_button;
+    };
 
-	class MouseScrollEvent : public Event
-	{
-	public:
-		MouseScrollEvent(float xOffset, float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
+    class MouseReleaseEvent : public Event
+    {
+    public:
+        MouseReleaseEvent(MouseCode button) : m_button(button) {}
 
-		std::string toString() const override
-		{
-			return "MouseScrollEvent-> X-Offset: " + std::to_string(m_xOffset) + ", Y-Offset: " + std::to_string(m_yOffset);
-		}
+        std::string toString() const override
+        {
+            return "MouseReleaseEvent";
+        }
 
-		void setXOffset(float xOffset) { m_xOffset = xOffset; }
-		float getXOffset() const { return m_xOffset; }
+        void setButton(MouseCode button)
+        {
+            m_button = button;
+        }
 
-		void setYOffset(float yOffset) { m_yOffset = yOffset; }
-		float getYOffset() const { return m_yOffset; }
+        MouseCode getButton() const
+        {
+            return m_button;
+        }
 
-		EVENT_TYPE(MouseScrollEvent);
+        EVENT_TYPE(MouseReleaseEvent);
 
-	private:
-		float m_xOffset;
-		float m_yOffset;
-	};
+    private:
+        MouseCode m_button;
+    };
 
+    class MouseScrollEvent : public Event
+    {
+    public:
+        MouseScrollEvent(float xOffset, float yOffset) : m_xOffset(xOffset), m_yOffset(yOffset) {}
 
-	class EventNotifier
-	{
-	public:
-		EventNotifier(Event& event) : m_event(event) {}
+        std::string toString() const override
+        {
+            return "MouseScrollEvent-> X-Offset: " + std::to_string(m_xOffset) +
+                   ", Y-Offset: " + std::to_string(m_yOffset);
+        }
 
-		template<typename T, typename F>
-		bool Notify(const F& func)
-		{
-			if (m_event.handled)
-				return false;
+        void setXOffset(float xOffset)
+        {
+            m_xOffset = xOffset;
+        }
 
-			if (auto* newEvent = dynamic_cast<T*>(&m_event))
-			{
-				m_event.handled |= func(*newEvent);
-				return true;
-			}
-			return false;
+        float getXOffset() const
+        {
+            return m_xOffset;
+        }
 
-		}
-	private:
-		Event& m_event;
-	};
-}
+        void setYOffset(float yOffset)
+        {
+            m_yOffset = yOffset;
+        }
+
+        float getYOffset() const
+        {
+            return m_yOffset;
+        }
+
+        EVENT_TYPE(MouseScrollEvent);
+
+    private:
+        float m_xOffset;
+        float m_yOffset;
+    };
+
+    class EventNotifier
+    {
+    public:
+        EventNotifier(Event& event) : m_event(event) {}
+
+        template <typename T, typename F>
+        bool Notify(const F& func)
+        {
+            if (m_event.handled)
+                return false;
+
+            if (auto* newEvent = dynamic_cast<T*>(&m_event)) {
+                m_event.handled |= func(*newEvent);
+                return true;
+            }
+            return false;
+        }
+
+    private:
+        Event& m_event;
+    };
+} // namespace Rendurr

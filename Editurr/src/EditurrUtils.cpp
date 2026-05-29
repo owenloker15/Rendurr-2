@@ -6,24 +6,24 @@
 
 namespace Editurr
 {
-	namespace Utils
-	{
-		std::filesystem::path getExecutablePath()
-		{
+    namespace Utils
+    {
+        std::filesystem::path getExecutablePath()
+        {
 #if defined(_WIN32)
 
-			char buffer[MAX_PATH];
-			GetModuleFileNameA(NULL, buffer, MAX_PATH);
-			return std::filesystem::path(buffer);
+            char buffer[MAX_PATH];
+            GetModuleFileNameA(NULL, buffer, MAX_PATH);
+            return std::filesystem::path(buffer);
 #else
 #error Unsupported platform
 #endif
-		}
+        }
 
-		std::filesystem::path getAssetDirectory()
-		{
-			auto exe = getExecutablePath();
-			return exe.parent_path() / "assets";
-		}
-	}
-}
+        std::filesystem::path getAssetDirectory()
+        {
+            auto exe = getExecutablePath();
+            return exe.parent_path() / "assets";
+        }
+    } // namespace Utils
+} // namespace Editurr

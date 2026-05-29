@@ -1,39 +1,42 @@
 #pragma once
 
-#include <string>
 #include <glm/mat4x4.hpp>
+#include <string>
 
 namespace Rendurr
 {
-	class CameraUniform
-	{
-	public:
-		CameraUniform(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+    class CameraUniform
+    {
+    public:
+        CameraUniform(glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 
-		void upload(uint32_t shaderId) const;
-	private:
-		glm::mat4 m_viewMatrix;
-		glm::mat4 m_projectionMatrix;
-	};
+        void upload(uint32_t shaderId) const;
 
-	class MeshTransformUniform
-	{
-	public:
-		MeshTransformUniform(glm::mat4 transform);
+    private:
+        glm::mat4 m_viewMatrix;
+        glm::mat4 m_projectionMatrix;
+    };
 
-		void upload(uint32_t shaderId) const;
-	private:
-		glm::mat4 m_transform;
-	};
+    class MeshTransformUniform
+    {
+    public:
+        MeshTransformUniform(glm::mat4 transform);
 
-	class TextureUniform
-	{
-	public:
-		TextureUniform(std::string uniformName, uint32_t textureSlot);
+        void upload(uint32_t shaderId) const;
 
-		void upload(uint32_t shaderId) const;
-	private:
-		std::string m_uniformName;
-		uint32_t m_textureSlot;
-	};
-}
+    private:
+        glm::mat4 m_transform;
+    };
+
+    class TextureUniform
+    {
+    public:
+        TextureUniform(std::string uniformName, uint32_t textureSlot);
+
+        void upload(uint32_t shaderId) const;
+
+    private:
+        std::string m_uniformName;
+        uint32_t m_textureSlot;
+    };
+} // namespace Rendurr
