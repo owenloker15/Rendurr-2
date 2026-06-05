@@ -1,30 +1,29 @@
 #pragma once
 
-#include <Render/VertexArray.hpp>
-#include <Render/VertexBuffer.hpp>
+#include <vector>
 
 #include "Material.hpp"
+#include "Render/VertexBuffer.hpp"
 
 namespace Rendurr
 {
-    class Mesh
+    typedef uint32_t MeshHandle;
+
+    struct MeshData
     {
-    public:
-        Mesh(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices);
-        Mesh(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices, Material&& material);
+        uint32_t vaRendererId;
+        uint32_t vbRendererId;
+        uint32_t ibRendererId;
 
-        Mesh(const Mesh&) = delete;
-        Mesh& operator=(const Mesh&) = delete;
+        uint32_t indexCount;
 
-        Mesh(Mesh&&) = default;
-        Mesh& operator=(Mesh&&) = default;
-
-        const VertexArray& getVertexArray() const;
-
-        const Material& getMaterial() const;
-
-    private:
-        VertexArray m_vertexArray;
-        Material m_material;
+        MaterialHandle mHandle;
     };
+
+    MeshHandle mesh_create(AssetManager& assetManager,
+                           std::vector<Vertex>&& vertices,
+                           std::vector<uint32_t>&& indices,
+                           MaterialHandle mHandle);
+    void mesh_destroy(MeshHandle handle);
+
 } // namespace Rendurr

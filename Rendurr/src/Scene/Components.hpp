@@ -32,14 +32,8 @@ namespace Rendurr
 
     struct MeshComponent
     {
-        explicit MeshComponent(Mesh&& mesh) : mesh(std::move(mesh)) {}
+        explicit MeshComponent(MeshHandle handle) : handle(handle) {}
 
-        MeshComponent(const MeshComponent&) = delete;
-        MeshComponent& operator=(const MeshComponent&) = delete;
-
-        MeshComponent(MeshComponent&&) = default;
-        MeshComponent& operator=(MeshComponent&&) = default;
-
-        Mesh mesh;
+        MeshHandle handle;
     };
 } // namespace Rendurr

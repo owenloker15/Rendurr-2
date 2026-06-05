@@ -4,51 +4,52 @@
 
 namespace Rendurr
 {
-    VertexArray::VertexArray(std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices)
-        : m_vertexBuffer(std::move(vertices)), m_indexBuffer(std::move(indices))
+    VertexArrayData vertex_array_create(std::vector<Vertex>&& vertices,
+                                        std::vector<uint32_t>&& indices)
     {
-        glCreateVertexArrays(1, &m_rendererId);
+        VertexArrayData data;
+
+        data.vbData = vertex_buffer_create(std::move(vertices));
+        data.ibData = index_buffer_create(std::move(indices));
+
+        glCreateVertexArrays(1, &data.rendererId);
 
         // Vertex Buffer
-        glVertexArrayVertexBuffer(
-            m_rendererId, 0, m_vertexBuffer.getRendererId(), 0, sizeof(Vertex));
+        glVertexArrayVertexBuffer(data.rendererId, 0, data.vbData.rendererId, 0, sizeof(Vertex));
 
-        glEnableVertexArrayAttrib(m_rendererId, 0); // Position
-        glEnableVertexArrayAttrib(m_rendererId, 1); // Normals
-        glEnableVertexArrayAttrib(m_rendererId, 2); // Texture Coordinates
+        glEnableVertexArrayAttrib(data.rendererId, 0); // Position
+        glEnableVertexArrayAttrib(data.rendererId, 1); // Normals
+        glEnableVertexArrayAttrib(data.rendererId, 2); // Texture Coordinates
 
         glVertexArrayAttribFormat(
-            m_rendererId, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
-        glVertexArrayAttribFormat(m_rendererId, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+            data.rendererId, 0, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, position));
         glVertexArrayAttribFormat(
-            m_rendererId, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, texCoords));
+            data.rendererId, 1, 3, GL_FLOAT, GL_FALSE, offsetof(Vertex, normal));
+        glVertexArrayAttribFormat(
+            data.rendererId, 2, 2, GL_FLOAT, GL_FALSE, offsetof(Vertex, texCoords));
 
-        glVertexArrayAttribBinding(m_rendererId, 0, 0);
-        glVertexArrayAttribBinding(m_rendererId, 1, 0);
-        glVertexArrayAttribBinding(m_rendererId, 2, 0);
+        glVertexArrayAttribBinding(data.rendererId, 0, 0);
+        glVertexArrayAttribBinding(data.rendererId, 1, 0);
+        glVertexArrayAttribBinding(data.rendererId, 2, 0);
 
         // Index
-        glVertexArrayElementBuffer(m_rendererId, m_indexBuffer.getRendererId());
+        glVertexArrayElementBuffer(data.rendererId, data.ibData.rendererId);
+        return data;
     }
 
-    void VertexArray::bind() const
+    void vertex_array_destroy(uint32_t rendererId)
     {
-        glBindVertexArray(m_rendererId);
+        glDeleteVertexArrays(1, &rendererId);
     }
 
-    void VertexArray::unbind() const
+    void vertex_array_bind(uint32_t rendererId)
+    {
+        glBindVertexArray(rendererId);
+    }
+
+    void vertex_array_unbind()
     {
         glBindVertexArray(0);
     }
 
-    void VertexArray::release()
-    {
-        glDeleteVertexArrays(1, &m_rendererId);
-        m_rendererId = 0;
-    }
-
-    const IndexBuffer& VertexArray::getIndexBuffer() const
-    {
-        return m_indexBuffer;
-    }
 } // namespace Rendurr

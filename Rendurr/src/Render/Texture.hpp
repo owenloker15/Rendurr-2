@@ -4,25 +4,42 @@
 
 namespace Rendurr
 {
-    enum class TextureType
+    struct AssetManager;
+
+    typedef uint32_t TextureHandle;
+
+    enum class TextureType : uint8_t
     {
         Ambient
     };
 
-    class Texture
+    struct TextureData
     {
-    public:
-        Texture(const std::filesystem::path& filepath, TextureType type);
-        ~Texture() = default;
-
-        TextureType getType() const;
-
-        void bind(uint32_t textureSlot) const;
-
-        static std::pair<std::string, uint32_t> TextureTypeToString(TextureType type);
-
-    private:
-        uint32_t m_rendererId;
-        TextureType m_type;
+        const char* name;
+        uint32_t rendererId;
+        TextureType type;
     };
+
+    struct TextureUniformData
+    {
+        const char* uniformName;
+        uint16_t textureSlot;
+    };
+
+    TextureHandle texture_create(AssetManager& assetManager,
+                                 const std::filesystem::path& path,
+                                 TextureType type);
+    void texture_destroy(TextureHandle handle);
+    void texture_bind(TextureHandle handle, uint16_t textureSlot);
+
+    // TODO make this lookup where enum is index in array
+    constexpr TextureUniformData texture_uniform_data(TextureType type)
+    {
+        switch (type) {
+            case TextureType::Ambient:
+                return {"u_Material_albedo", 0};
+        }
+        return {};
+    }
+
 } // namespace Rendurr

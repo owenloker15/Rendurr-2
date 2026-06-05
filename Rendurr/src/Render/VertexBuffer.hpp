@@ -12,17 +12,12 @@ namespace Rendurr
         glm::vec2 texCoords;
     };
 
-    class VertexBuffer
+    struct VertexBufferData
     {
-    public:
-        VertexBuffer(std::vector<Vertex>&& vertices);
-        ~VertexBuffer() = default;
-
-        void release();
-
-        uint32_t getRendererId() const;
-
-    private:
-        uint32_t m_rendererId;
+        uint32_t rendererId;
     };
+
+    VertexBufferData vertex_buffer_create(std::vector<Vertex>&& vertices);
+    void vertex_buffer_destroy(uint32_t rendererId);
+
 } // namespace Rendurr

@@ -6,16 +6,17 @@
 
 namespace Rendurr
 {
-    class Material
+    typedef uint32_t MaterialHandle;
+
+    struct MaterialData
     {
-    public:
-        Material() = default;
-        ~Material() = default;
-
-        void addTexture(const std::filesystem::path& filePath, TextureType type);
-        const std::vector<Texture>& getTextures() const;
-
-    private:
-        std::vector<Texture> m_textures;
+        std::vector<TextureHandle> textureHandles;
     };
+
+    MaterialHandle material_create(AssetManager& assetManager);
+    void material_add_texture(AssetManager& assetManager,
+                              MaterialHandle materialHandle,
+                              TextureHandle textureHandle);
+    void material_destroy();
+
 } // namespace Rendurr

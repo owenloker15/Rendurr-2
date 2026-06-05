@@ -6,24 +6,18 @@
 
 namespace Rendurr
 {
-    // TODO maybe make this a templated class
-    class Shader
+    typedef uint32_t ShaderHandle;
+
+    ShaderHandle shader_program_create(const std::filesystem::path& vertexFilePath,
+                                       const std::filesystem::path& fragmentFilePath);
+    void shader_program_destroy(ShaderHandle handle);
+    void shader_program_use(ShaderHandle handle);
+
+    template <typename T>
+    void shader_program_upload_uniform(ShaderHandle handle, T uniform)
     {
-    public:
-        Shader(const std::filesystem::path& vertexFilePath,
-               const std::filesystem::path& fragmentFilepath);
+        shader_program_use(handle);
+        uniform.upload(handle);
+    }
 
-        void use();
-
-        template <typename T>
-        void uploadUniformSet(const T& uniformSet)
-        {
-            // Shader must be in use in order to upload a uniform to it
-            use();
-            uniformSet.upload(m_shaderProgramId);
-        }
-
-    private:
-        uint32_t m_shaderProgramId;
-    };
 } // namespace Rendurr

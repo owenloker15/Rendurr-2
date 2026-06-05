@@ -1,7 +1,7 @@
 #pragma once
 
-#include <Scene/Mesh.hpp>
 #include <glm/vec4.hpp>
+#include <Scene/Mesh.hpp>
 
 #include "Scene/Scene.hpp"
 #include "Shader.hpp"
@@ -33,6 +33,7 @@ private:                                                                        
         static void enableDebug();
 
         static void drawScene(const std::shared_ptr<Scene>& pScene,
-                              const std::shared_ptr<Shader>& pShader);
+                              const AssetManager& assetManager,
+                              const ShaderHandle& pShader);
     };
 } // namespace Rendurr

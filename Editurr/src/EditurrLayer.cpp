@@ -1,15 +1,16 @@
 #include "EditurrLayer.hpp"
 
+#include <glm/ext/matrix_transform.hpp>
+#include <imgui.h>
 #include <Render/Renderer.hpp>
 #include <Scene/Mesh.hpp>
 #include <Scene/OrthographicProjectionStrategy.hpp>
-#include <glm/ext/matrix_transform.hpp>
-#include <imgui.h>
 
 #include "Editurr.hpp"
 #include "EditurrConfig.h"
 #include "EditurrUtils.hpp"
 #include "Scene/Components.hpp"
+#include "Scene/Material.hpp"
 
 namespace
 {
@@ -101,8 +102,8 @@ namespace Editurr
         Editurr::getInstance().setActiveScene(Editurr::getInstance().createScene());
 
         const std::filesystem::path assetDir(EDITURR_ASSETS_DIR);
-        m_pShader = std::make_shared<Rendurr::Shader>(assetDir / "shaders" / "vertex.glsl",
-                                                      assetDir / "shaders" / "frag.glsl");
+        m_shaderHandle = Rendurr::shader_program_create(assetDir / "shaders" / "vertex.glsl",
+                                                        assetDir / "shaders" / "frag.glsl");
 
         std::vector<Rendurr::Vertex> vertices = {
             // Front face
@@ -155,13 +156,19 @@ namespace Editurr
 
         Rendurr::Entity entity = pActiveScene->createEntity();
 
-        Rendurr::Material material;
-        const std::filesystem::path wallTexturePath = assetDir / "textures" / "wall.jpg";
-        material.addTexture(wallTexturePath, Rendurr::TextureType::Ambient);
+        Rendurr::MaterialHandle materialHandle = Rendurr::material_create(m_assetManager);
+        const Rendurr::TextureHandle textureHandle =
+            Rendurr::texture_create(m_assetManager,
+                                    assetDir / "textures" / "wall.jpg",
+                                    Rendurr::TextureType::Ambient);
+        Rendurr::material_add_texture(m_assetManager, materialHandle, textureHandle);
 
-        Rendurr::Mesh mesh(std::move(vertices), std::move(indices), std::move(material));
+        const Rendurr::MeshHandle meshHandle = Rendurr::mesh_create(m_assetManager,
+                                                                    std::move(vertices),
+                                                                    std::move(indices),
+                                                                    materialHandle);
 
-        Rendurr::MeshComponent meshComponent(std::move(mesh));
+        Rendurr::MeshComponent meshComponent(meshHandle);
         pActiveScene->addComponent(entity, std::move(meshComponent));
 
         Rendurr::TransformComponent transformComponent({0.0f, 0.0f, 0.0f},
@@ -189,14 +196,17 @@ namespace Editurr
         glm::mat4 viewMatrix = m_cameraController.getViewMatrix();
         glm::mat4 projectionMatrix = m_cameraController.getProjectionMatrix();
         Rendurr::CameraUniform cameraUniform{viewMatrix, projectionMatrix};
-        m_pShader->uploadUniformSet(cameraUniform);
+
+        Rendurr::shader_program_upload_uniform(m_shaderHandle, std::move(cameraUniform));
 
         glm::mat4 transform = glm::mat4(1.0f);
         transform = glm::translate(transform, {0.0f, 0.0f, 0.0f});
         transform = glm::rotate(transform, dt, glm::vec3(0.0f, 0.0f, 1.0f));
 
         // todo Unsafe
-        Rendurr::Renderer::drawScene(Editurr::getInstance().getActiveScene(), m_pShader);
+        Rendurr::Renderer::drawScene(Editurr::getInstance().getActiveScene(),
+                                     m_assetManager,
+                                     m_shaderHandle);
         m_pFramebuffer->unbind();
     }
 

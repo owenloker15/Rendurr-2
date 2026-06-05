@@ -5,6 +5,7 @@
 #include "Render/Framebuffer.hpp"
 #include "Render/Texture.hpp"
 #include "Render/VertexArray.hpp"
+#include "Scene/AssetManager.h"
 #include "Scene/Camera.hpp"
 #include "Scene/CameraController.hpp"
 #include "Scene/Mesh.hpp"
@@ -24,7 +25,8 @@ namespace Editurr
         Rendurr::CameraController m_cameraController;
         glm::vec2 m_viewportSize;
 
-        std::shared_ptr<Rendurr::Shader> m_pShader;
+        Rendurr::ShaderHandle m_shaderHandle;
         std::unique_ptr<Rendurr::Framebuffer> m_pFramebuffer;
+        Rendurr::AssetManager m_assetManager;
     };
 } // namespace Editurr

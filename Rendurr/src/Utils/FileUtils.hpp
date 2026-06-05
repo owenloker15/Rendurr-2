@@ -9,25 +9,18 @@ namespace Rendurr
 {
     namespace Utils
     {
-        inline std::string readFileTextContents(const std::filesystem::path& filepath)
+        inline std::string read_file(const std::string& path)
         {
-            std::ifstream file(filepath.string(), std::ios::binary);
-            if (!file) {
-                RND_CORE_ERROR("Failed to open file: {}", filepath.string());
+            std::ifstream f(path, std::ios::binary | std::ios::ate);
+            if (!f) {
+                RND_CORE_ERROR("Failed to open file: {}", path);
                 return "";
             }
+            std::string s(f.tellg(), '\0');
 
-            if (!file.is_open()) {
-                RND_CORE_ERROR("Stream failed to open: {}", filepath.string());
-                return "";
-            }
-
-            std::ostringstream buffer;
-            buffer << file.rdbuf();
-
-            file.close();
-
-            return buffer.str();
+            f.seekg(0);
+            f.read(s.data(), s.size());
+            return s;
         }
     } // namespace Utils
 } // namespace Rendurr

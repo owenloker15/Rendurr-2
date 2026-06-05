@@ -1,30 +1,39 @@
 #include "Texture.hpp"
 
+#include <cstdint>
 #include <glad/glad.h>
 #include <stb_image.h>
 
 #include "Core/Log.hpp"
+#include "Scene/AssetManager.h"
 
 namespace Rendurr
 {
-    Texture::Texture(const std::filesystem::path& filepath, TextureType type) : m_type(type)
+    TextureHandle texture_create(AssetManager& assetManager,
+                                 const std::filesystem::path& path,
+                                 TextureType type)
     {
+        TextureHandle handle = assetManager.m_textures.size();
+
+        std::string keepStringAlive = path.string();
+
+        TextureData data = {.name = keepStringAlive.c_str(), .rendererId = 0, .type = type};
+
         stbi_set_flip_vertically_on_load(true);
 
         // Begin creating opengl texture
-        glCreateTextures(GL_TEXTURE_2D, 1, &m_rendererId);
+        glCreateTextures(GL_TEXTURE_2D, 1, &data.rendererId);
 
-        glTextureParameteri(m_rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTextureParameteri(m_rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTextureParameteri(m_rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTextureParameteri(m_rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTextureParameteri(data.rendererId, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTextureParameteri(data.rendererId, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        glTextureParameteri(data.rendererId, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTextureParameteri(data.rendererId, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
         // Read texture data from file
         int width, height, numChannels;
-        unsigned char* data =
-            stbi_load(filepath.string().c_str(), &width, &height, &numChannels, 0);
+        unsigned char* imgData = stbi_load(path.string().c_str(), &width, &height, &numChannels, 0);
 
-        if (data) {
+        if (imgData) {
             // glTexStorage2D(m_rendererId)
 
             // Check channels and determine format
@@ -47,42 +56,33 @@ namespace Rendurr
             else {
                 RND_CORE_ERROR("Unsupported number of channels: {} for {}",
                                numChannels,
-                               filepath.string());
+                               path.string());
             }
 
-            glTextureStorage2D(m_rendererId, 1, internalFormat, width, height);
+            glTextureStorage2D(data.rendererId, 1, internalFormat, width, height);
             glTextureSubImage2D(
-                m_rendererId, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, data);
+                data.rendererId, 0, 0, 0, width, height, dataFormat, GL_UNSIGNED_BYTE, imgData);
 
             // TODO error checking
         }
         else {
             std::string errorReason = stbi_failure_reason();
             RND_CORE_ERROR("Failed to load texture image data: {} - {}",
-                           filepath.string(),
+                           path.string(),
                            errorReason);
         }
 
-        stbi_image_free(data);
+        assetManager.m_textures.insert(assetManager.m_textures.begin() + handle, data);
+
+        stbi_image_free(imgData);
+        return handle;
     }
 
-    TextureType Texture::getType() const
+    void texture_destroy(TextureHandle handle) {}
+
+    void texture_bind(TextureHandle handle, uint16_t textureSlot)
     {
-        return m_type;
+        glBindTextureUnit(textureSlot, handle);
     }
 
-    void Texture::bind(uint32_t textureSlot) const
-    {
-        glBindTextureUnit(textureSlot, m_rendererId);
-    }
-
-    std::pair<std::string, uint32_t> Texture::TextureTypeToString(TextureType type)
-    {
-        switch (type) {
-            case TextureType::Ambient:
-                return std::make_pair<std::string, uint32_t>("u_Material_albedo", 0);
-            default:
-                return std::make_pair<std::string, uint32_t>("", -1);
-        }
-    }
 } // namespace Rendurr

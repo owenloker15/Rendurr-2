@@ -3,33 +3,34 @@
 #include <glad/glad.h>
 #include <iostream>
 
-#include "Scene/Components.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "Scene/AssetManager.h"
+#include "Scene/Components.hpp"
 
 namespace
 {
-    void drawIndexed(const Rendurr::VertexArray& vertexArray)
+    void drawIndexed(uint32_t vertexArrayRendererId, uint32_t indexCount)
     {
-        vertexArray.bind();
-        glDrawElements(GL_TRIANGLES,
-                       vertexArray.getIndexBuffer().getIndexCount(),
-                       GL_UNSIGNED_INT,
-                       nullptr);
-        vertexArray.unbind();
+        Rendurr::vertex_array_bind(vertexArrayRendererId);
+        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+        Rendurr::vertex_array_unbind();
     }
 
-    void drawMesh(const Rendurr::Mesh& mesh, const std::shared_ptr<Rendurr::Shader>& pShader)
+    void upload_material_to_shader(const Rendurr::AssetManager& assetManager,
+                                   Rendurr::MaterialHandle materialHandle,
+                                   Rendurr::ShaderHandle shaderHandle)
     {
-        pShader->use();
+        Rendurr::shader_program_use(shaderHandle);
 
-        for (const auto& texture : mesh.getMaterial().getTextures()) {
-            const auto nameToSlot = Rendurr::Texture::TextureTypeToString(texture.getType());
-            Rendurr::TextureUniform textureUniform{nameToSlot.first, nameToSlot.second};
-            texture.bind(nameToSlot.second);
-            pShader->uploadUniformSet(textureUniform);
+        const auto& materialData = asset_manager_get_material(assetManager, materialHandle);
+        for (const auto& textureHandle : materialData.textureHandles) {
+            const auto& textureData = asset_manager_get_texture(assetManager, textureHandle);
+            const auto uniformData = Rendurr::texture_uniform_data(textureData.type);
+            const auto& textureSlot = uniformData.textureSlot;
+            Rendurr::TextureUniform textureUniform{uniformData.uniformName, textureSlot};
+            Rendurr::texture_bind(textureData.rendererId, textureSlot);
+            Rendurr::shader_program_upload_uniform(shaderHandle, std::move(textureUniform));
         }
-
-        drawIndexed(mesh.getVertexArray());
     }
 
     void glDebugOutput(GLenum source,
@@ -115,7 +116,6 @@ namespace
                 break;
         }
         std::cout << std::endl;
-        std::cout << std::endl;
     }
 } // namespace
 
@@ -150,12 +150,13 @@ namespace Rendurr
     }
 
     void Renderer::drawScene(const std::shared_ptr<Scene>& pScene,
-                             const std::shared_ptr<Shader>& pShader)
+                             const AssetManager& assetManager,
+                             const ShaderHandle& shaderHandle)
     {
-        pShader->use();
+        Rendurr::shader_program_use(shaderHandle);
 
-        pScene->forEachEntity([&pScene, &pShader](Entity entity) {
-            const auto transformComponent = pScene->getTransformComponent(entity);
+        pScene->forEachEntity([&pScene, &assetManager, &shaderHandle](Entity entity) {
+            const TransformComponent& transformComponent = pScene->getTransformComponent(entity);
             glm::mat4 transform = glm::mat4(1.0f);
             transform = glm::translate(transform, transformComponent.translation);
             transform = glm::rotate(transform,
@@ -170,10 +171,12 @@ namespace Rendurr
             transform = glm::scale(transform, transformComponent.scale);
 
             MeshTransformUniform transformUniform{transform};
-            pShader->uploadUniformSet(transformUniform);
+            Rendurr::shader_program_upload_uniform(shaderHandle, std::move(transformUniform));
 
-            const auto& meshComponent = pScene->getMeshComponent(entity);
-            drawMesh(meshComponent.mesh, pShader);
+            const MeshComponent& meshComponent = pScene->getMeshComponent(entity);
+            const auto& meshData = asset_manager_get_mesh(assetManager, meshComponent.handle);
+            upload_material_to_shader(assetManager, meshData.mHandle, shaderHandle);
+            drawIndexed(meshData.vaRendererId, meshData.indexCount);
         });
     }
 } // namespace Rendurr

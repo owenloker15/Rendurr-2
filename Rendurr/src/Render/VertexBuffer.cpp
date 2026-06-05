@@ -1,28 +1,26 @@
 #include "VertexBuffer.hpp"
 
-#include <Scene/Mesh.hpp>
 #include <glad/glad.h>
+#include <Scene/Mesh.hpp>
 
 namespace Rendurr
 {
-
-    VertexBuffer::VertexBuffer(std::vector<Vertex>&& vertices)
+    VertexBufferData vertex_buffer_create(std::vector<Vertex>&& vertices)
     {
-        glCreateBuffers(1, &m_rendererId);
-        glNamedBufferData(m_rendererId,
+        VertexBufferData data;
+
+        glCreateBuffers(1, &data.rendererId);
+        glNamedBufferData(data.rendererId,
                           sizeof(Vertex) * vertices.size(),
                           vertices.data(),
                           GL_STATIC_DRAW);
+
+        return data;
     }
 
-    void VertexBuffer::release()
+    void vertex_buffer_destroy(uint32_t rendererId)
     {
-        glDeleteBuffers(1, &m_rendererId);
-        m_rendererId = 0;
+        glDeleteBuffers(1, &rendererId);
     }
 
-    uint32_t VertexBuffer::getRendererId() const
-    {
-        return m_rendererId;
-    }
 } // namespace Rendurr

@@ -1,16 +1,23 @@
 #include "Material.hpp"
 
+#include "AssetManager.h"
 #include "Render/Texture.hpp"
 
 namespace Rendurr
 {
-    void Material::addTexture(const std::filesystem::path& filePath, TextureType type)
+    MaterialHandle material_create(AssetManager& assetManager)
     {
-        m_textures.emplace_back(filePath, type);
+        // TODO handle what happens if material is deleted
+
+        MaterialHandle handle = assetManager.m_materials.size();
+        assetManager.m_materials.emplace_back();
+        return handle;
     }
 
-    const std::vector<Texture>& Material::getTextures() const
+    void material_add_texture(AssetManager& assetManager,
+                              MaterialHandle materialHandle,
+                              TextureHandle textureHandle)
     {
-        return m_textures;
+        assetManager.m_materials[materialHandle].textureHandles.push_back(textureHandle);
     }
 } // namespace Rendurr

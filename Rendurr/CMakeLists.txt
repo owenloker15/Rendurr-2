@@ -41,6 +41,8 @@ set(RENDURR_SOURCES
     src/Render/VertexBuffer.hpp
     src/Render/VertexBuffer.cpp
 
+    src/Scene/AssetManager.h
+    src/Scene/AssetManager.cpp
     src/Scene/Camera.hpp
     src/Scene/Camera.cpp
     src/Scene/CameraController.hpp
@@ -64,6 +66,7 @@ set(RENDURR_SOURCES
     src/UI/UiLayer.hpp
     src/UI/UiLayer.cpp
 
+    src/Utils/SparseSet.h
     src/Utils/FileUtils.hpp
     src/Utils/Timer.hpp
 )
