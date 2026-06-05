@@ -22,11 +22,10 @@ namespace Editurr
         void onUiRender() override;
 
     private:
-        Rendurr::CameraController m_cameraController;
-        glm::vec2 m_viewportSize;
-
-        Rendurr::ShaderHandle m_shaderHandle;
-        std::unique_ptr<Rendurr::Framebuffer> m_pFramebuffer;
         Rendurr::AssetManager m_assetManager;
+        Rendurr::CameraController m_cameraController;
+        std::unique_ptr<Rendurr::Framebuffer> m_pFramebuffer;
+        Rendurr::ShaderHandle m_shaderHandle;
+        glm::vec2 m_viewportSize;
     };
 } // namespace Editurr

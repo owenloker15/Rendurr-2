@@ -94,10 +94,7 @@ namespace
 namespace Editurr
 {
     EditurrLayer::EditurrLayer(std::string name)
-        : m_cameraController(1280.0 / 720,
-                             5.0,
-                             std::make_unique<Rendurr::OrthographicProjectionStrategy>()),
-          Layer(name)
+        : m_cameraController(1280.0 / 720, 5.0, Rendurr::ProjectionType::Ortho), Layer(name)
     {
         Editurr::getInstance().setActiveScene(Editurr::getInstance().createScene());
 

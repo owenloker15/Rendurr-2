@@ -7,11 +7,13 @@
 
 namespace Rendurr
 {
-    CameraController::CameraController(double aspectRatio,
-                                       double zoom,
-                                       std::unique_ptr<IProjectionStrategy> projectionStrategy)
-        : m_camera(aspectRatio, zoom, {0, 0, 5}, {0, 0, 0}),
-          m_strategy(std::move(projectionStrategy))
+    CameraController::CameraController(float aspectRatio, float zoom, ProjectionType projectionType)
+        : m_camera{.position = {0, 0, 5},
+                   .target = {0, 0, 0},
+                   .aspectRatio = aspectRatio,
+                   .zoom = zoom,
+                   .projType = projectionType}
+
     {
         EventPublisher::getInstance()->subscribe<MousePressEvent>(
             this, &CameraController::onMousePressEvent);
@@ -23,24 +25,48 @@ namespace Rendurr
             this, &CameraController::onMouseScrollEvent);
     }
 
-    glm::mat4 CameraController::getViewMatrix()
+    glm::mat4 CameraController::getViewMatrix() const
     {
-        if (!m_strategy) {
-            RND_CORE_ERROR("No projection strategy set!");
-            return {};
-        }
+        switch (m_camera.projType) {
+            case ProjectionType::Ortho:
+                {
+                    return glm::lookAt(m_camera.position, m_camera.target, m_camera.upDir);
+                }
 
-        return m_strategy->calculateViewMatrix(m_camera);
+            case ProjectionType::Perspective:
+                {
+                    RND_ASSERT(false, "Perspective projection not supported");
+                    return glm::mat4(1.0f);
+                }
+
+            default:
+                {
+                    RND_ASSERT(false, "Unknown projection type");
+                    return glm::mat4(1.0f);
+                }
+        }
     }
 
-    glm::mat4 CameraController::getProjectionMatrix()
+    glm::mat4 CameraController::getProjectionMatrix() const
     {
-        if (!m_strategy) {
-            RND_CORE_ERROR("No projection strategy set!");
-            return {};
+        switch (m_camera.projType) {
+            case ProjectionType::Ortho:
+                {
+                    const float halfW = m_camera.zoom * m_camera.aspectRatio;
+                    const float halfH = m_camera.zoom;
+                    return glm::ortho(-halfW, halfW, -halfH, halfH, -100.0f, 100.0f);
+                }
+            case ProjectionType::Perspective:
+                {
+                    RND_ASSERT(false, "Perspective projection not supported");
+                    return glm::mat4(1.0f);
+                }
+            default:
+                {
+                    RND_ASSERT(false, "Unknown projection type");
+                    return glm::mat4(1.0f);
+                }
         }
-
-        return m_strategy->calculateProjectionMatrix(m_camera);
     }
 
     bool CameraController::onMousePressEvent(MousePressEvent& event)
