@@ -2,8 +2,7 @@
 #include <memory>
 
 #include "Camera.hpp"
-#include "Events/Event.hpp"
-#include "IProjectionStrategy.hpp"
+#include "Core/Input.h"
 
 namespace Rendurr
 {
@@ -12,14 +11,10 @@ namespace Rendurr
     public:
         CameraController(float aspectRatio, float zoom, ProjectionType projectionType);
 
+        void update(const Input& input);
+
         glm::mat4 getViewMatrix() const;
         glm::mat4 getProjectionMatrix() const;
-
-    private:
-        bool onMousePressEvent(MousePressEvent& event);
-        bool onMouseReleaseEvent(MouseReleaseEvent& event);
-        bool onMouseMoveEvent(MouseMoveEvent& event);
-        bool onMouseScrollEvent(MouseScrollEvent& event);
 
     private:
         Camera m_camera;

@@ -1,9 +1,8 @@
 #pragma once
 
-#include <filesystem>
 #include <fstream>
 
-#include "Core/Log.hpp"
+#include "Core/Log.h"
 
 namespace Rendurr
 {

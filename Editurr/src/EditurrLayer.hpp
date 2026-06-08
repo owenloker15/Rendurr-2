@@ -1,3 +1,4 @@
+/*
 #pragma once
 
 #include <Rendurr.hpp>
@@ -29,3 +30,4 @@ namespace Editurr
         glm::vec2 m_viewportSize;
     };
 } // namespace Editurr
+*/

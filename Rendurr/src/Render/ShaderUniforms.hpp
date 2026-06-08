@@ -5,6 +5,7 @@
 
 namespace Rendurr
 {
+    /*
     class CameraUniform
     {
     public:
@@ -39,4 +40,5 @@ namespace Rendurr
         std::string m_uniformName;
         uint32_t m_textureSlot;
     };
+*/
 } // namespace Rendurr

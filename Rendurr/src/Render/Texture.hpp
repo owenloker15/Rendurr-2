@@ -6,8 +6,6 @@ namespace Rendurr
 {
     struct AssetManager;
 
-    typedef uint32_t TextureHandle;
-
     enum class TextureType : uint8_t
     {
         Ambient
@@ -26,11 +24,9 @@ namespace Rendurr
         uint16_t textureSlot;
     };
 
-    TextureHandle texture_create(AssetManager& assetManager,
-                                 const std::filesystem::path& path,
-                                 TextureType type);
-    void texture_destroy(TextureHandle handle);
-    void texture_bind(TextureHandle handle, uint16_t textureSlot);
+    TextureData texture_create(const std::filesystem::path& path, TextureType type);
+    void texture_destroy();
+    void texture_bind(TextureData data, uint16_t textureSlot);
 
     // TODO make this lookup where enum is index in array
     constexpr TextureUniformData texture_uniform_data(TextureType type)

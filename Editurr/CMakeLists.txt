@@ -13,13 +13,39 @@ configure_file(
 
 # Add sources
 set(EDITURR_SOURCES
-    src/Editurr.hpp
-    src/Editurr.cpp
+    src/Editurr.h
     src/EditurrEntry.cpp
     src/EditurrLayer.hpp
     src/EditurrLayer.cpp
     src/EditurrUtils.hpp
     src/EditurrUtils.cpp
+
+    src/Render/EditurrRender.h
+    src/Render/EditurrRender.cpp
+
+    src/Scene/AssetManager.h
+    src/Scene/AssetManager.cpp
+    src/Scene/ComponentPool.h
+    src/Scene/ComponentPool.cpp
+    src/Scene/Components.h
+    src/Scene/ECSManager.h
+    src/Scene/ECSManager.cpp
+    src/Scene/Entity.h
+    src/Scene/Entity.cpp
+    src/Scene/IComponentPool.h
+    src/Scene/Material.h
+    src/Scene/Material.cpp
+    src/Scene/Mesh.h
+    src/Scene/Mesh.cpp
+    src/Scene/Scene.h
+    src/Scene/Scene.cpp
+    src/Scene/Texture.h
+    src/Scene/Texture.cpp
+
+    src/UI/EditurrUI.h
+    src/UI/EditurrUI.cpp
+    src/UI/UI.h
+    src/UI/UI.cpp
 )
 
 # Create executable
@@ -38,4 +64,4 @@ add_custom_command(TARGET Editurr POST_BUILD
 )
 
 # Link libraries
-target_link_libraries(Editurr PRIVATE Rendurr)
+target_link_libraries(Editurr PRIVATE Rendurr assimp)

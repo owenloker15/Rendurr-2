@@ -10,12 +10,14 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(THIRDPARTY_DIR ${CMAKE_SOURCE_DIR}/ThirdParty)
 
 # Add third-party libraries
+add_subdirectory(ThirdParty/assimp)
 add_subdirectory(ThirdParty/glad)
 add_subdirectory(ThirdParty/glfw)
 add_subdirectory(ThirdParty/glm)
 add_subdirectory(ThirdParty/spdlog)
 add_subdirectory(ThirdParty/stb_image)
 
+set_target_properties(assimp PROPERTIES FOLDER "ThirdParty")
 set_target_properties(glad PROPERTIES FOLDER "ThirdParty")
 set_target_properties(glfw PROPERTIES FOLDER "ThirdParty")
 set_target_properties(glm PROPERTIES FOLDER "ThirdParty")

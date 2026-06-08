@@ -3,24 +3,11 @@
 #include <glad/glad.h>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "Core/Log.hpp"
-
-namespace
-{
-    GLint getUniformLocation(uint32_t shaderId, const char* uniformName)
-    {
-        auto uniformLocation = glGetUniformLocation(shaderId, uniformName);
-        if (uniformLocation == -1) {
-            RND_CORE_ERROR("Failed to find uniform with name {} in shader with id {}!",
-                           uniformName,
-                           shaderId);
-        }
-        return uniformLocation;
-    }
-} // namespace
+#include "Core/Log.h"
 
 namespace Rendurr
 {
+    /*
     CameraUniform::CameraUniform(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
         : m_viewMatrix(std::move(viewMatrix)), m_projectionMatrix(std::move(projectionMatrix))
     {}
@@ -56,5 +43,6 @@ namespace Rendurr
         auto textureNameUniformLocation = getUniformLocation(shaderId, m_uniformName.c_str());
         glUniform1i(textureNameUniformLocation, m_textureSlot);
     }
+    */
 
 } // namespace Rendurr

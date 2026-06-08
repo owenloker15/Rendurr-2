@@ -4,35 +4,10 @@
 #include <iostream>
 
 #include "glm/ext/matrix_transform.hpp"
-#include "Scene/AssetManager.h"
-#include "Scene/Components.hpp"
+#include "VertexArray.hpp"
 
 namespace
 {
-    void drawIndexed(uint32_t vertexArrayRendererId, uint32_t indexCount)
-    {
-        Rendurr::vertex_array_bind(vertexArrayRendererId);
-        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
-        Rendurr::vertex_array_unbind();
-    }
-
-    void upload_material_to_shader(const Rendurr::AssetManager& assetManager,
-                                   Rendurr::MaterialHandle materialHandle,
-                                   Rendurr::ShaderHandle shaderHandle)
-    {
-        Rendurr::shader_program_use(shaderHandle);
-
-        const auto& materialData = asset_manager_get_material(assetManager, materialHandle);
-        for (const auto& textureHandle : materialData.textureHandles) {
-            const auto& textureData = asset_manager_get_texture(assetManager, textureHandle);
-            const auto uniformData = Rendurr::texture_uniform_data(textureData.type);
-            const auto& textureSlot = uniformData.textureSlot;
-            Rendurr::TextureUniform textureUniform{uniformData.uniformName, textureSlot};
-            Rendurr::texture_bind(textureData.rendererId, textureSlot);
-            Rendurr::shader_program_upload_uniform(shaderHandle, std::move(textureUniform));
-        }
-    }
-
     void glDebugOutput(GLenum source,
                        GLenum type,
                        unsigned int id,
@@ -121,27 +96,27 @@ namespace
 
 namespace Rendurr
 {
-    void Renderer::clear()
+    void clear()
     {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
-    void Renderer::setClearColor(const glm::vec4& rgba)
+    void setClearColor(const glm::vec4& rgba)
     {
         glClearColor(rgba.r, rgba.g, rgba.b, rgba.a);
     }
 
-    void Renderer::setViewport(float width, float height)
+    void setViewport(float width, float height)
     {
         glViewport(0, 0, width, height);
     }
 
-    void Renderer::enableDepthTesting()
+    void enableDepthTesting()
     {
         glEnable(GL_DEPTH_TEST);
     }
 
-    void Renderer::enableDebug()
+    void enableDebug()
     {
         glEnable(GL_DEBUG_OUTPUT);
         glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
@@ -149,34 +124,23 @@ namespace Rendurr
         glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     }
 
-    void Renderer::drawScene(const std::shared_ptr<Scene>& pScene,
-                             const AssetManager& assetManager,
-                             const ShaderHandle& shaderHandle)
+    void drawIndexed(uint32_t vertexArrayRendererId, uint32_t indexCount)
     {
-        Rendurr::shader_program_use(shaderHandle);
-
-        pScene->forEachEntity([&pScene, &assetManager, &shaderHandle](Entity entity) {
-            const TransformComponent& transformComponent = pScene->getTransformComponent(entity);
-            glm::mat4 transform = glm::mat4(1.0f);
-            transform = glm::translate(transform, transformComponent.translation);
-            transform = glm::rotate(transform,
-                                    glm::radians(transformComponent.rotation.x),
-                                    glm::vec3(1.0f, 0.0f, 0.0f));
-            transform = glm::rotate(transform,
-                                    glm::radians(transformComponent.rotation.y),
-                                    glm::vec3(0.0f, 1.0f, 0.0f));
-            transform = glm::rotate(transform,
-                                    glm::radians(transformComponent.rotation.z),
-                                    glm::vec3(0.0f, 0.0f, 1.0f));
-            transform = glm::scale(transform, transformComponent.scale);
-
-            MeshTransformUniform transformUniform{transform};
-            Rendurr::shader_program_upload_uniform(shaderHandle, std::move(transformUniform));
-
-            const MeshComponent& meshComponent = pScene->getMeshComponent(entity);
-            const auto& meshData = asset_manager_get_mesh(assetManager, meshComponent.handle);
-            upload_material_to_shader(assetManager, meshData.mHandle, shaderHandle);
-            drawIndexed(meshData.vaRendererId, meshData.indexCount);
-        });
+        vertex_array_bind(vertexArrayRendererId);
+        glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+        vertex_array_unbind();
     }
+
+    void upload_texture_to_shader(const TextureData& texture, const ShaderData& shader)
+    {
+        shader_program_use(shader);
+
+        const TextureUniformData uniformData = texture_uniform_data(texture.type);
+        const char* uniformName = uniformData.uniformName;
+        const auto& textureSlot = uniformData.textureSlot;
+
+        texture_bind(texture, textureSlot);
+        shader_uniform_upload_int(shader, uniformName, textureSlot);
+    }
+
 } // namespace Rendurr

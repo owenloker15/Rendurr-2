@@ -4,17 +4,12 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
-#include "Core/Log.hpp"
-#include "Scene/AssetManager.h"
+#include "Core/Log.h"
 
 namespace Rendurr
 {
-    TextureHandle texture_create(AssetManager& assetManager,
-                                 const std::filesystem::path& path,
-                                 TextureType type)
+    TextureData texture_create(const std::filesystem::path& path, TextureType type)
     {
-        TextureHandle handle = assetManager.m_textures.size();
-
         std::string keepStringAlive = path.string();
 
         TextureData data = {.name = keepStringAlive.c_str(), .rendererId = 0, .type = type};
@@ -72,17 +67,15 @@ namespace Rendurr
                            errorReason);
         }
 
-        assetManager.m_textures.insert(assetManager.m_textures.begin() + handle, data);
-
         stbi_image_free(imgData);
-        return handle;
+        return data;
     }
 
-    void texture_destroy(TextureHandle handle) {}
+    void texture_destroy() {}
 
-    void texture_bind(TextureHandle handle, uint16_t textureSlot)
+    void texture_bind(TextureData data, uint16_t textureSlot)
     {
-        glBindTextureUnit(textureSlot, handle);
+        glBindTextureUnit(textureSlot, data.rendererId);
     }
 
 } // namespace Rendurr

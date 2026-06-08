@@ -1,3 +1,4 @@
+/*
 #include "EditurrLayer.hpp"
 
 #include <glm/ext/matrix_transform.hpp>
@@ -224,10 +225,9 @@ namespace Editurr
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
         ImGui::Begin("Viewport");
 
-        /*
         m_viewportFocused = ImGui::IsWindowFocused();
         Application::Get().GetUILayer()->BlockEvents(!m_viewportFocused);
-        */
+        #1#
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
         m_viewportSize = {viewportPanelSize.x, viewportPanelSize.y};
@@ -244,3 +244,4 @@ namespace Editurr
         dockspaceEnd();
     }
 } // namespace Editurr
+*/

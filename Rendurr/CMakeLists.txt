@@ -5,29 +5,19 @@ project(Rendurr)
 
 # Set sources
 set(RENDURR_SOURCES
-    src/Rendurr.hpp
+    src/Rendurr.h
+    src/Rendurr.cpp
 
-    src/Core/Application.hpp
-    src/Core/Application.cpp
-    src/Core/Input.hpp
-    src/Core/Layer.hpp
-    src/Core/LayerStack.hpp
-    src/Core/LayerStack.cpp
-    src/Core/Log.hpp
+    src/Core/Input.h
+    src/Core/Log.h
     src/Core/Log.cpp
-    src/Core/Window.hpp
+    src/Core/Window.h
     src/Core/Window.cpp
-
-    src/Events/Event.hpp
-    src/Events/EventPublisher.hpp
-    src/Events/EventPublisher.cpp
 
     src/Render/Framebuffer.hpp
     src/Render/Framebuffer.cpp
     src/Render/IndexBuffer.hpp
     src/Render/IndexBuffer.cpp
-    src/Render/RenderContext.hpp
-    src/Render/RenderContext.cpp
     src/Render/Renderer.hpp
     src/Render/Renderer.cpp
     src/Render/Shader.hpp
@@ -41,32 +31,11 @@ set(RENDURR_SOURCES
     src/Render/VertexBuffer.hpp
     src/Render/VertexBuffer.cpp
 
-    src/Scene/AssetManager.h
-    src/Scene/AssetManager.cpp
     src/Scene/Camera.hpp
     src/Scene/Camera.cpp
     src/Scene/CameraController.hpp
     src/Scene/CameraController.cpp
-    src/Scene/Components.hpp
-    src/Scene/ComponentPool.hpp
-    src/Scene/ECSManager.hpp
-    src/Scene/ECSManager.cpp
-    src/Scene/Entity.hpp
-    src/Scene/Entity.cpp
-    src/Scene/IProjectionStrategy.hpp
-    src/Scene/Material.hpp
-    src/Scene/Material.cpp
-    src/Scene/Mesh.hpp
-    src/Scene/Mesh.cpp
-    src/Scene/OrthographicProjectionStrategy.hpp
-    src/Scene/OrthographicProjectionStrategy.cpp
-    src/Scene/Scene.hpp
-    src/Scene/Scene.cpp
 
-    src/UI/UiLayer.hpp
-    src/UI/UiLayer.cpp
-
-    src/Utils/SparseSet.h
     src/Utils/FileUtils.hpp
     src/Utils/Timer.hpp
 )

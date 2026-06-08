@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-#include "Core/Log.hpp"
+#include "Core/Log.h"
 
 namespace
 {
