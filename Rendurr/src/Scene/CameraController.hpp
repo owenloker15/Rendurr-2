@@ -16,6 +16,8 @@ namespace Rendurr
         glm::mat4 getViewMatrix() const;
         glm::mat4 getProjectionMatrix() const;
 
+        const glm::vec3& cameraPos();
+
     private:
         Camera m_camera;
 

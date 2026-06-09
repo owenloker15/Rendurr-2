@@ -113,4 +113,8 @@ namespace Rendurr
         }
     }
 
+    const glm::vec3& CameraController::cameraPos()
+    {
+        return m_camera.position;
+    }
 } // namespace Rendurr

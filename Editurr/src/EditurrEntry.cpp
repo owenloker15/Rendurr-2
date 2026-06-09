@@ -142,10 +142,24 @@ int main()
 
         // Update
         cameraController.update(state.input);
-        glm::mat4 viewMatrix = cameraController.getViewMatrix();
-        glm::mat4 projectionMatrix = cameraController.getProjectionMatrix();
+        const glm::mat4 viewMatrix = cameraController.getViewMatrix();
+        const glm::mat4 projectionMatrix = cameraController.getProjectionMatrix();
+        const glm::vec3& cameraPos = cameraController.cameraPos();
         Rendurr::shader_uniform_upload_mat4(shader, "u_ViewMatrix", viewMatrix);
         Rendurr::shader_uniform_upload_mat4(shader, "u_ProjectionMatrix", projectionMatrix);
+        Rendurr::shader_uniform_upload_vec3(shader, "u_ViewPos", cameraPos);
+
+        // TODO light
+        Rendurr::shader_uniform_upload_vec3(shader, "light.position", {0.0f, 0.0f, 3.0f});
+        Rendurr::shader_uniform_upload_vec3(shader, "light.ambient", {0.2f, 0.2f, 0.2f});
+        Rendurr::shader_uniform_upload_vec3(shader, "light.diffuse", {0.5f, 0.5f, 0.5f});
+        Rendurr::shader_uniform_upload_vec3(shader, "light.specular", {1.0f, 1.0f, 1.0f});
+
+        // TODO material
+        Rendurr::shader_uniform_upload_vec3(shader, "material.ambient", {1.0f, 0.5f, 0.31f});
+        Rendurr::shader_uniform_upload_vec3(shader, "material.diffuse", {1.0f, 0.5f, 0.31f});
+        Rendurr::shader_uniform_upload_vec3(shader, "material.specular", {0.5f, 0.5f, 0.5f});
+        Rendurr::shader_uniform_upload_float(shader, "material.shininess", 32.0f);
 
         // Render to framebuffer
         state.renderContext.framebuffer.bind();
