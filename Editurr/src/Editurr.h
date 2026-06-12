@@ -12,6 +12,7 @@ namespace Editurr
     struct UIContext
     {
         float viewportWidth, viewportHeight;
+        bool viewportFocused;
     };
 
     struct RenderContext

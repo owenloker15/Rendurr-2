@@ -85,7 +85,9 @@ int main()
         // Process inputs
 
         // Update
-        cameraController.update(state.input);
+        if (state.uiContext.viewportFocused) {
+            cameraController.update(state.input);
+        }
         const glm::mat4 viewMatrix = cameraController.getViewMatrix();
         const glm::mat4 projectionMatrix = cameraController.getProjectionMatrix();
         const glm::vec3& cameraPos = cameraController.cameraPos();
