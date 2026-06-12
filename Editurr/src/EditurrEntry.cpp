@@ -35,8 +35,9 @@ int main()
     Rendurr::FramebufferSpecification spec = {
         .width = window.specification.width,
         .height = window.specification.height,
-        .m_colorAttachments = {{"color", Rendurr::ColorAttachmentFormat::RGBA8},
-                               {"red", Rendurr::ColorAttachmentFormat::RGBA8}}};
+        .attachments = {{.key = "color", .format = Rendurr::ColorAttachmentFormat::RGBA8},
+                        {.key = "red", .format = Rendurr::ColorAttachmentFormat::RGBA8}}};
+    Rendurr::Framebuffer fb = Rendurr::framebuffer_create(spec);
 
     // Log
 
@@ -53,57 +54,10 @@ int main()
 
     // Editurr global state
     Editurr::EditurrState state = {.input = {},
-                                   .renderContext = {.framebuffer = {spec}},
+                                   .renderContext = {.framebuffer = fb},
                                    .assetManager = {},
                                    .uiContext = {.viewportWidth = 0.0f, .viewportHeight = 0.0f},
                                    .activeScene = {}};
-
-    std::vector<Rendurr::Vertex> vertices = {
-        // Front face
-        {{-0.5f, -0.5f, 0.5f}, {0, 0, 1}, {0, 0}},
-        {{0.5f, -0.5f, 0.5f}, {0, 0, 1}, {1, 0}},
-        {{0.5f, 0.5f, 0.5f}, {0, 0, 1}, {1, 1}},
-        {{-0.5f, 0.5f, 0.5f}, {0, 0, 1}, {0, 1}},
-
-        // Back face
-        {{0.5f, -0.5f, -0.5f}, {0, 0, -1}, {0, 0}},
-        {{-0.5f, -0.5f, -0.5f}, {0, 0, -1}, {1, 0}},
-        {{-0.5f, 0.5f, -0.5f}, {0, 0, -1}, {1, 1}},
-        {{0.5f, 0.5f, -0.5f}, {0, 0, -1}, {0, 1}},
-
-        // Left face
-        {{-0.5f, -0.5f, -0.5f}, {-1, 0, 0}, {0, 0}},
-        {{-0.5f, -0.5f, 0.5f}, {-1, 0, 0}, {1, 0}},
-        {{-0.5f, 0.5f, 0.5f}, {-1, 0, 0}, {1, 1}},
-        {{-0.5f, 0.5f, -0.5f}, {-1, 0, 0}, {0, 1}},
-
-        // Right face
-        {{0.5f, -0.5f, 0.5f}, {1, 0, 0}, {0, 0}},
-        {{0.5f, -0.5f, -0.5f}, {1, 0, 0}, {1, 0}},
-        {{0.5f, 0.5f, -0.5f}, {1, 0, 0}, {1, 1}},
-        {{0.5f, 0.5f, 0.5f}, {1, 0, 0}, {0, 1}},
-
-        // Top face
-        {{-0.5f, 0.5f, 0.5f}, {0, 1, 0}, {0, 0}},
-        {{0.5f, 0.5f, 0.5f}, {0, 1, 0}, {1, 0}},
-        {{0.5f, 0.5f, -0.5f}, {0, 1, 0}, {1, 1}},
-        {{-0.5f, 0.5f, -0.5f}, {0, 1, 0}, {0, 1}},
-
-        // Bottom face
-        {{-0.5f, -0.5f, -0.5f}, {0, -1, 0}, {0, 0}},
-        {{0.5f, -0.5f, -0.5f}, {0, -1, 0}, {1, 0}},
-        {{0.5f, -0.5f, 0.5f}, {0, -1, 0}, {1, 1}},
-        {{-0.5f, -0.5f, 0.5f}, {0, -1, 0}, {0, 1}},
-    };
-
-    std::vector<uint32_t> indices = {
-        0,  2,  1,  2,  0,  3,  // Front
-        4,  6,  5,  6,  4,  7,  // Back
-        8,  10, 9,  10, 8,  11, // Left
-        12, 14, 13, 14, 12, 15, // Right
-        16, 18, 17, 18, 16, 19, // Top
-        20, 22, 21, 22, 20, 23  // Bottom
-    };
 
     Editurr::Entity& entity = Editurr::scene_create_entity(state.activeScene);
     const auto modelHandle =
@@ -149,7 +103,7 @@ int main()
         // TODO hardcoded to texture slot 0
 
         // Render to framebuffer
-        state.renderContext.framebuffer.bind();
+        Rendurr::framebuffer_bind(state.renderContext.framebuffer);
 
         Rendurr::setClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         Rendurr::clear();
@@ -157,7 +111,7 @@ int main()
         // todo Unsafe
         // todo pass in state?
         render_scene(state.activeScene, state.assetManager, shader);
-        state.renderContext.framebuffer.unbind();
+        Rendurr::framebuffer_unbind();
 
         // UI rendering
         Editurr::ui_frame_begin();

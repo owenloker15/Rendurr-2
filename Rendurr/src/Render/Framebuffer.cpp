@@ -6,115 +6,163 @@
 
 namespace
 {
-    struct GLFormat
+    void gl_format(Rendurr::ColorAttachmentFormat fmt, GLint* internal, GLenum* format)
     {
-        GLint internal;
-        GLenum format;
-    };
+        switch (fmt) {
+            case Rendurr::ColorAttachmentFormat::RGBA8:
+                *internal = GL_RGBA8;
+                *format = GL_RGBA;
+                break;
 
-    GLFormat enumToGLFormat(const Rendurr::ColorAttachmentFormat& format)
-    {
-        switch (format) {
-            case (Rendurr::ColorAttachmentFormat::RGBA8):
-                return {GL_RGBA8, GL_RGBA};
             default:
-                RND_CORE_ERROR("Invalid Color Attachment Format!");
-                return {};
+                RND_CORE_ERROR("Invalid ColorAttachmentFormat");
+                *internal = GL_RGBA8;
+                *format = GL_RGBA;
+                break;
         }
+    }
+
+    void framebuffer_destroy_internal(Rendurr::Framebuffer& fb)
+    {
+        if (fb.rendererId)
+            glDeleteFramebuffers(1, &fb.rendererId);
+
+        for (auto& it : fb.colorAttachments)
+            glDeleteTextures(1, &it.second);
+
+        if (fb.depthAttachment)
+            glDeleteRenderbuffers(1, &fb.depthAttachment);
+    }
+
+    void framebuffer_build(Rendurr::Framebuffer& fb)
+    {
+        fb.colorAttachmentIndex = 0;
+
+        glBindFramebuffer(GL_FRAMEBUFFER, fb.rendererId);
+
+        std::vector<GLenum> drawBuffers;
+        drawBuffers.reserve(fb.spec.attachments.size());
+
+        for (size_t i = 0; i < fb.spec.attachments.size(); i++) {
+            const auto& a = fb.spec.attachments[i];
+
+            GLint internal;
+            GLenum format;
+            gl_format(a.format, &internal, &format);
+
+            uint32_t tex;
+            glGenTextures(1, &tex);
+            glBindTexture(GL_TEXTURE_2D, tex);
+
+            glTexImage2D(GL_TEXTURE_2D,
+                         0,
+                         internal,
+                         fb.width,
+                         fb.height,
+                         0,
+                         format,
+                         GL_UNSIGNED_BYTE,
+                         nullptr);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            glFramebufferTexture2D(
+                GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + (GLenum)i, GL_TEXTURE_2D, tex, 0);
+
+            fb.colorAttachments[a.key] = tex;
+            drawBuffers.push_back(GL_COLOR_ATTACHMENT0 + (GLenum)i);
+
+            fb.colorAttachmentIndex++;
+        }
+
+        glDrawBuffers((GLsizei)drawBuffers.size(), drawBuffers.data());
+
+        // depth buffer
+        glGenRenderbuffers(1, &fb.depthAttachment);
+        glBindRenderbuffer(GL_RENDERBUFFER, fb.depthAttachment);
+
+        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, fb.width, fb.height);
+
+        glFramebufferRenderbuffer(GL_FRAMEBUFFER,
+                                  GL_DEPTH_STENCIL_ATTACHMENT,
+                                  GL_RENDERBUFFER,
+                                  fb.depthAttachment);
+
+        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+            RND_CORE_ERROR("Framebuffer incomplete!");
+
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 } // namespace
 
 namespace Rendurr
 {
-    Framebuffer::Framebuffer(FramebufferSpecification spec)
-        : m_width(spec.width), m_height(spec.height)
+    Framebuffer framebuffer_create(const FramebufferSpecification& spec)
     {
-        glGenFramebuffers(1, &m_rendererId);
-        bind();
+        Framebuffer fb{};
 
-        for (const auto& [key, format] : spec.m_colorAttachments) {
-            addColorAttachment(key, format);
-        }
+        fb.spec = spec;
+        fb.width = spec.width;
+        fb.height = spec.height;
 
-        // Depth buffer
-        glGenRenderbuffers(1, &m_depthAttachment);
-        glBindRenderbuffer(GL_RENDERBUFFER, m_depthAttachment);
-        glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, m_width, m_height);
+        glGenFramebuffers(1, &fb.rendererId);
 
-        glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                                  GL_DEPTH_STENCIL_ATTACHMENT,
-                                  GL_RENDERBUFFER,
-                                  m_depthAttachment);
+        framebuffer_build(fb);
 
-        if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            RND_CORE_ERROR("Framebuffer is incomplete!");
-        }
-
-        unbind();
+        return fb;
     }
 
-    void Framebuffer::bind() const
+    void framebuffer_destroy(Framebuffer& fb)
     {
-        glBindFramebuffer(GL_FRAMEBUFFER, m_rendererId);
-        glViewport(0, 0, m_width, m_height);
+        framebuffer_destroy_internal(fb);
+
+        fb.colorAttachments.clear();
+        fb.rendererId = 0;
+        fb.depthAttachment = 0;
+        fb.width = 0;
+        fb.height = 0;
     }
 
-    void Framebuffer::unbind() const
+    void framebuffer_bind(Framebuffer& fb)
+    {
+        glBindFramebuffer(GL_FRAMEBUFFER, fb.rendererId);
+        glViewport(0, 0, fb.width, fb.height);
+    }
+
+    void framebuffer_unbind()
     {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
-    void Framebuffer::release()
+    void framebuffer_resize(Framebuffer& fb, uint32_t width, uint32_t height)
     {
-        glDeleteFramebuffers(1, &m_rendererId);
+        if (width == 0 || height == 0)
+            return;
 
-        for (auto& [key, texture] : m_colorAttachments) {
-            glDeleteTextures(1, &texture);
-        }
+        fb.width = width;
+        fb.height = height;
 
-        glDeleteRenderbuffers(1, &m_depthAttachment);
+        // delete old GPU resources
+        for (auto& it : fb.colorAttachments)
+            glDeleteTextures(1, &it.second);
+
+        fb.colorAttachments.clear();
+
+        if (fb.depthAttachment)
+            glDeleteRenderbuffers(1, &fb.depthAttachment);
+
+        fb.depthAttachment = 0;
+
+        framebuffer_build(fb);
     }
 
-    uint32_t Framebuffer::getColorAttachmentId(const std::string& colorAttachmentKey) const
+    uint32_t framebuffer_get_color_attachment(Framebuffer& fb, const std::string& key)
     {
-        return m_colorAttachments.at(colorAttachmentKey);
-    }
+        auto it = fb.colorAttachments.find(key);
+        if (it == fb.colorAttachments.end())
+            return 0;
 
-    void Framebuffer::addColorAttachment(const std::string& colorAttachmentKey,
-                                         const ColorAttachmentFormat& format)
-    {
-        const auto glFormats = enumToGLFormat(format);
-
-        // Create texture
-        uint32_t texture;
-        glGenTextures(1, &texture);
-        glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D,
-                     0,
-                     glFormats.internal,
-                     m_width,
-                     m_height,
-                     0,
-                     glFormats.format,
-                     GL_UNSIGNED_BYTE,
-                     nullptr);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        // Attach texture to framebuffer
-        glFramebufferTexture2D(GL_FRAMEBUFFER,
-                               GL_COLOR_ATTACHMENT0 + m_colorAttachmentIndex,
-                               GL_TEXTURE_2D,
-                               texture,
-                               0);
-
-        m_colorAttachments[colorAttachmentKey] = texture;
-        m_colorAttachmentIndex++;
-
-        // “The fragment shader outputs should go to these attachments.”
-        std::vector<GLenum> buffers;
-        for (int i = 0; i < m_colorAttachments.size(); i++)
-            buffers.push_back(GL_COLOR_ATTACHMENT0 + i);
-
-        glDrawBuffers(buffers.size(), buffers.data());
+        return it->second;
     }
 } // namespace Rendurr

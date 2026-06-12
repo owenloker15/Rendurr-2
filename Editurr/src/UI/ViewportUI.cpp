@@ -17,11 +17,21 @@ namespace Editurr
         */
 
         ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-        state.uiContext.viewportWidth = viewportPanelSize.x;
-        state.uiContext.viewportHeight = viewportPanelSize.y;
 
-        uint32_t textureID = state.renderContext.framebuffer.getColorAttachmentId("color");
-        ImGui::Image(textureID,
+        uint32_t newWidth = (uint32_t)viewportPanelSize.x;
+        uint32_t newHeight = (uint32_t)viewportPanelSize.y;
+
+        state.uiContext.viewportWidth = (float)newWidth;
+        state.uiContext.viewportHeight = (float)newHeight;
+
+        if (newWidth != state.renderContext.framebuffer.width ||
+            newHeight != state.renderContext.framebuffer.height) {
+            Rendurr::framebuffer_resize(state.renderContext.framebuffer, newWidth, newHeight);
+        }
+
+        uint32_t colorAttachmentTexture =
+            Rendurr::framebuffer_get_color_attachment(state.renderContext.framebuffer, "color");
+        ImGui::Image(colorAttachmentTexture,
                      ImVec2{state.uiContext.viewportWidth, state.uiContext.viewportHeight},
                      ImVec2(0, 1),
                      ImVec2(1, 0));
