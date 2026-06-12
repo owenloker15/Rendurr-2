@@ -1,4 +1,9 @@
+# Folders
 build/
 .vs/
 .cache/
+
+#Files
+.nvim.lua
+imgui.ini
 compile_commands.json

@@ -25,15 +25,8 @@ set(EDITURR_SOURCES
 
     src/Scene/AssetManager.h
     src/Scene/AssetManager.cpp
-    src/Scene/ComponentPool.h
-    src/Scene/ComponentPool.cpp
-    src/Scene/Components.h
-    src/Scene/ECSManager.h
-    src/Scene/ECSManager.cpp
     src/Scene/Entity.h
-    src/Scene/IComponentPool.h
     src/Scene/Material.h
-    src/Scene/Material.cpp
     src/Scene/Mesh.h
     src/Scene/Mesh.cpp
     src/Scene/Model.h
