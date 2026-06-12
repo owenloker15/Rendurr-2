@@ -1,9 +1,27 @@
 #include "EditurrRender.h"
 
 #include "../Scene/Material.h"
+#include "../Scene/Mesh.h"
+#include "../Scene/Model.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "Render/Renderer.hpp"
 #include "Render/Shader.hpp"
+
+namespace
+{
+    void render_mesh(const Editurr::AssetManager& assetManager,
+                     const Rendurr::ShaderData& shader,
+                     const Editurr::MeshData& meshData)
+    {
+        const auto& materialData =
+            asset_manager_get_material(assetManager, meshData.materialHandle);
+        for (const auto& textureId : materialData.textureHandles) {
+            const auto& textureData = asset_manager_get_texture(assetManager, textureId);
+            Rendurr::upload_texture_to_shader(textureData, shader);
+        }
+        Rendurr::drawIndexed(meshData.vaRendererId, meshData.indexCount);
+    }
+} // namespace
 
 namespace Editurr
 {
@@ -13,32 +31,29 @@ namespace Editurr
     {
         Rendurr::shader_program_use(shader);
 
-        scene.forEachEntity([&scene, &assetManager, &shader](Entity entity) {
-            const TransformComponent& transformComponent = scene.getTransformComponent(entity);
+        for (const auto& entity : scene.entities) {
+            // Transform
             glm::mat4 transform = glm::mat4(1.0f);
-            transform = glm::translate(transform, transformComponent.translation);
+            transform = glm::translate(transform, entity.transform.translation);
             transform = glm::rotate(transform,
-                                    glm::radians(transformComponent.rotation.x),
+                                    glm::radians(entity.transform.rotation.x),
                                     glm::vec3(1.0f, 0.0f, 0.0f));
             transform = glm::rotate(transform,
-                                    glm::radians(transformComponent.rotation.y),
+                                    glm::radians(entity.transform.rotation.y),
                                     glm::vec3(0.0f, 1.0f, 0.0f));
             transform = glm::rotate(transform,
-                                    glm::radians(transformComponent.rotation.z),
+                                    glm::radians(entity.transform.rotation.z),
                                     glm::vec3(0.0f, 0.0f, 1.0f));
-            transform = glm::scale(transform, transformComponent.scale);
-
+            transform = glm::scale(transform, entity.transform.scale);
             Rendurr::shader_uniform_upload_mat4(shader, "u_Transform", transform);
+            // End transform
 
-            const MeshComponent& meshComponent = scene.getMeshComponent(entity);
-            const auto& meshData = asset_manager_get_mesh(assetManager, meshComponent.handle);
-            const auto& materialData =
-                asset_manager_get_material(assetManager, meshData.materialHandle);
-            for (const auto& textureId : materialData.textureHandles) {
-                const auto& textureData = asset_manager_get_texture(assetManager, textureId);
-                Rendurr::upload_texture_to_shader(textureData, shader);
+            // Begin Model
+            const auto& modelData = asset_manager_get_model(assetManager, entity.model);
+            for (const auto& meshData : modelData.meshes) {
+                render_mesh(assetManager, shader, meshData);
             }
-            Rendurr::drawIndexed(meshData.vaRendererId, meshData.indexCount);
-        });
+            // End Model
+        }
     }
 } // namespace Editurr

@@ -2,11 +2,14 @@
 
 namespace Editurr
 {
-    Entity ECSManager::createEntity()
-    {
-        return m_nextEntityId++;
-    }
+    /*
+Entity ECSManager::createEntity()
+{
+    return m_nextEntityId++;
+}
+*/
 
+    /*
     void ECSManager::addComponent(Entity e, TransformComponent&& c)
     {
         m_transforms.emplace(e, std::move(c));
@@ -26,4 +29,5 @@ namespace Editurr
     {
         return m_meshs.at(e);
     }
+*/
 } // namespace Editurr

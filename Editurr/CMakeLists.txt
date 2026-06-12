@@ -31,12 +31,13 @@ set(EDITURR_SOURCES
     src/Scene/ECSManager.h
     src/Scene/ECSManager.cpp
     src/Scene/Entity.h
-    src/Scene/Entity.cpp
     src/Scene/IComponentPool.h
     src/Scene/Material.h
     src/Scene/Material.cpp
     src/Scene/Mesh.h
     src/Scene/Mesh.cpp
+    src/Scene/Model.h
+    src/Scene/Model.cpp
     src/Scene/Scene.h
     src/Scene/Scene.cpp
     src/Scene/Texture.h

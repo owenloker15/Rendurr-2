@@ -8,7 +8,13 @@ namespace Rendurr
 
     enum class TextureType : uint8_t
     {
-        Ambient
+        Diffuse,
+        Specular,
+        Normal,
+        Ambient,
+        Roughness,
+        Metallic,
+        Emissive
     };
 
     struct TextureData
@@ -32,8 +38,20 @@ namespace Rendurr
     constexpr TextureUniformData texture_uniform_data(TextureType type)
     {
         switch (type) {
+            case TextureType::Diffuse:
+                return {"material.diffuse", 0};
+            case TextureType::Specular:
+                return {"material.specular", 1};
+            case TextureType::Normal:
+                return {"material.normal", 2};
             case TextureType::Ambient:
-                return {"u_Material_albedo", 0};
+                return {"material.ambient", 3};
+            case TextureType::Roughness:
+                return {"material.roughness", 4};
+            case TextureType::Metallic:
+                return {"material.metallic", 5};
+            case TextureType::Emissive:
+                return {"material.emissive", 6};
         }
         return {};
     }

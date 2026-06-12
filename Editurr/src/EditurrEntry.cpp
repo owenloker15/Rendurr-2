@@ -7,9 +7,11 @@
 #include "Render/EditurrRender.h"
 #include "Render/Framebuffer.hpp"
 #include "Render/Renderer.hpp"
+#include "Render/VertexBuffer.hpp"
 #include "Scene/AssetManager.h"
 #include "Scene/CameraController.hpp"
 #include "Scene/Material.h"
+#include "Scene/Model.h"
 #include "Scene/Texture.h"
 #include "UI/EditurrUI.h"
 #include "UI/UI.h"
@@ -103,27 +105,14 @@ int main()
         20, 22, 21, 22, 20, 23  // Bottom
     };
 
-    const auto entity = state.activeScene.createEntity();
-
-    const auto materialHandle = Editurr::material_create(state.assetManager);
-    const Editurr::AssetHandle textureHandle =
-        Editurr::texture_create(state.assetManager,
-                                assetDir / "textures" / "wall.jpg",
-                                Rendurr::TextureType::Ambient);
-    Editurr::material_add_texture(state.assetManager, materialHandle, textureHandle);
-
-    const auto meshHandle = Editurr::mesh_create(state.assetManager,
-                                                 std::move(vertices),
-                                                 std::move(indices),
-                                                 materialHandle);
-
-    Editurr::MeshComponent meshComponent(meshHandle);
-    state.activeScene.addComponent(entity, std::move(meshComponent));
-
-    Editurr::TransformComponent transformComponent({0.0f, 0.0f, 0.0f},
-                                                   {0.0f, 0.0f, 1.0f},
-                                                   {1.0f, 1.0f, 1.0f});
-    state.activeScene.addComponent(entity, std::move(transformComponent));
+    Editurr::Entity entity = Editurr::scene_create_entity(state.activeScene);
+    const auto modelHandle =
+        Editurr::model_import_from_file(state.assetManager,
+                                        assetDir / "models" / "backpack" / "backpack.obj");
+    entity.model = modelHandle;
+    entity.transform = {.translation = {0.0f, 0.0f, 0.0f},
+                        .rotation = {0.0f, 0.0f, 1.0f},
+                        .scale = {1.0f, 1.0f, 1.0f}};
 
     Rendurr::enableDepthTesting();
 
@@ -156,15 +145,12 @@ int main()
         Rendurr::shader_uniform_upload_vec3(shader, "light.specular", {1.0f, 1.0f, 1.0f});
 
         // TODO material
-        Rendurr::shader_uniform_upload_vec3(shader, "material.ambient", {1.0f, 0.5f, 0.31f});
-        Rendurr::shader_uniform_upload_vec3(shader, "material.diffuse", {1.0f, 0.5f, 0.31f});
-        Rendurr::shader_uniform_upload_vec3(shader, "material.specular", {0.5f, 0.5f, 0.5f});
-        Rendurr::shader_uniform_upload_float(shader, "material.shininess", 32.0f);
+        // TODO hardcoded to texture slot 0
 
         // Render to framebuffer
         state.renderContext.framebuffer.bind();
 
-        Rendurr::setClearColor({1.0f, 1.0f, 1.0f, 1.0f});
+        Rendurr::setClearColor({0.1f, 0.1f, 0.1f, 1.0f});
         Rendurr::clear();
 
         // todo Unsafe

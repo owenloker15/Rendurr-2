@@ -12,6 +12,7 @@ namespace Editurr
 {
     constexpr inline uint32_t MAX_COMPONENTS = 32;
 
+    /*
     class ECSManager
     {
     public:
@@ -24,7 +25,9 @@ namespace Editurr
         ECSManager(ECSManager&&) = default;
         ECSManager& operator=(ECSManager&&) = default;
 
+        /*
         Entity createEntity();
+        #1#
 
         void addComponent(Entity e, TransformComponent&& c);
         void addComponent(Entity e, MeshComponent&& c);
@@ -38,4 +41,5 @@ namespace Editurr
         std::unordered_map<Entity, TransformComponent> m_transforms{};
         std::unordered_map<Entity, MeshComponent> m_meshs{};
     };
+*/
 } // namespace Editurr

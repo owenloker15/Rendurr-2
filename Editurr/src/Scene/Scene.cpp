@@ -2,9 +2,11 @@
 
 namespace Editurr
 {
-    uint32_t Scene::createEntity()
+    Entity scene_create_entity(Scene& scene)
     {
-        return m_ecs.createEntity();
+        Entity e{.id = scene.entities.size()};
+        scene.entities.emplace_back(e);
+        return e;
     }
 
 } // namespace Editurr
