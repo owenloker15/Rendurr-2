@@ -82,14 +82,14 @@ set_target_properties(imgui PROPERTIES FOLDER "ThirdParty")
 
 # Link publicly (all things liking to this will inherit)
 target_link_libraries(Rendurr PUBLIC 
-    glad
-    glfw
-    spdlog
     imgui
 )
 
 target_link_libraries(Rendurr PRIVATE 
+    glad
     stb_image
+    spdlog
+    glfw
 )
 
 # Compile Defs

@@ -9,6 +9,8 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 set(THIRDPARTY_DIR ${CMAKE_SOURCE_DIR}/ThirdParty)
 
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
 # Add third-party libraries
 add_subdirectory(ThirdParty/assimp)
 add_subdirectory(ThirdParty/glad)

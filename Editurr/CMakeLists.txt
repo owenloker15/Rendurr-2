@@ -45,7 +45,7 @@ set(EDITURR_SOURCES
 
     src/UI/EditurrUI.h
     src/UI/EditurrUI.cpp
-    src/UI/EntityUI.cpp
+    src/UI/EntityUI.h
     src/UI/EntityUI.cpp
     src/UI/ToolbarUI.h
     src/UI/ToolbarUI.cpp
@@ -71,4 +71,4 @@ add_custom_command(TARGET Editurr POST_BUILD
 )
 
 # Link libraries
-target_link_libraries(Editurr PRIVATE Rendurr assimp)
+target_link_libraries(Editurr PRIVATE Rendurr assimp spdlog)
