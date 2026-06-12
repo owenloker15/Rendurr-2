@@ -32,6 +32,30 @@ namespace Editurr
     {
         ImGui::Begin("Entity Tree");
 
+        // Right click context menu
+        if (ImGui::BeginPopupContextWindow("EntityTreeContextMenu",
+                                           ImGuiPopupFlags_MouseButtonRight)) {
+            if (ImGui::MenuItem("Create Entity")) {
+                // handle create entity
+            }
+
+            if (ImGui::MenuItem("Delete Selected")) {
+                // handle delete
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Expand All")) {
+                // handle expand all
+            }
+
+            if (ImGui::MenuItem("Collapse All")) {
+                // handle collapse all
+            }
+
+            ImGui::EndPopup();
+        }
+
         for (auto& entity : state.activeScene.entities) {
             if (ImGui::TreeNode(entity.name)) {
                 components_draw(state, entity);
