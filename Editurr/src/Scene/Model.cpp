@@ -92,18 +92,19 @@ namespace Editurr
                                        const std::filesystem::path& path)
     {
         AssetHandle handle = assetManager.m_models.size();
-        ModelData data;
+        const std::string stringPath = path.string();
+        ModelData data = {.modelFile = stringPath};
 
         Assimp::Importer importer;
 
         const aiScene* scene =
-            importer.ReadFile(path.string(),
+            importer.ReadFile(stringPath,
                               aiProcess_Triangulate | aiProcess_GenSmoothNormals |
                                   aiProcess_JoinIdenticalVertices);
 
         if (!scene) {
             RND_CORE_ERROR("Error reading model at path {} with error: {}",
-                           path.string(),
+                           stringPath,
                            importer.GetErrorString());
             throw std::runtime_error(importer.GetErrorString());
             // TODO invalid handle

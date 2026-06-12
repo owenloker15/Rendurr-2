@@ -17,6 +17,7 @@ namespace Editurr
     struct Entity
     {
         uint64_t id;
+        const char* name;
         AssetHandle model;
         Transform transform;
     };

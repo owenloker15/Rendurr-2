@@ -45,8 +45,14 @@ set(EDITURR_SOURCES
 
     src/UI/EditurrUI.h
     src/UI/EditurrUI.cpp
+    src/UI/EntityUI.cpp
+    src/UI/EntityUI.cpp
+    src/UI/ToolbarUI.h
+    src/UI/ToolbarUI.cpp
     src/UI/UI.h
     src/UI/UI.cpp
+    src/UI/ViewportUI.h
+    src/UI/ViewportUI.cpp
 )
 
 # Create executable

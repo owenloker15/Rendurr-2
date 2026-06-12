@@ -105,10 +105,11 @@ int main()
         20, 22, 21, 22, 20, 23  // Bottom
     };
 
-    Editurr::Entity entity = Editurr::scene_create_entity(state.activeScene);
+    Editurr::Entity& entity = Editurr::scene_create_entity(state.activeScene);
     const auto modelHandle =
         Editurr::model_import_from_file(state.assetManager,
                                         assetDir / "models" / "backpack" / "backpack.obj");
+    entity.name = "Backpack";
     entity.model = modelHandle;
     entity.transform = {.translation = {0.0f, 0.0f, 0.0f},
                         .rotation = {0.0f, 0.0f, 1.0f},

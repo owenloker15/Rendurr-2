@@ -17,6 +17,7 @@ namespace Editurr
         std::vector<ModelData> m_models{};
     };
 
+    // MATERIALS BEGIN
     AssetHandle material_create(AssetManager& assetManager);
     void material_add_texture(AssetManager& assetManager,
                               AssetHandle materialHandle,
@@ -24,15 +25,20 @@ namespace Editurr
     void material_destroy();
     const MaterialData& asset_manager_get_material(const AssetManager& assetManager,
                                                    AssetHandle handle);
+    // MATERIALS END
 
+    // TEXTURES BEGIN
     AssetHandle texture_create(AssetManager& assetManager,
                                const std::filesystem::path& path,
                                Rendurr::TextureType type);
     const Rendurr::TextureData& asset_manager_get_texture(const AssetManager& assetManager,
                                                           AssetHandle handle);
+    // TEXTURES END
 
+    // MODELS BEGIN
     AssetHandle model_import_from_file(AssetManager& assetManager,
                                        const std::filesystem::path& path);
     const ModelData& asset_manager_get_model(const AssetManager& assetManager, AssetHandle handle);
+    // MODELS END
 
 } // namespace Editurr
