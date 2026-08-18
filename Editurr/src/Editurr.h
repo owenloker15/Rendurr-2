@@ -11,8 +11,9 @@ namespace Editurr
 {
     struct UIContext
     {
-        float viewportWidth, viewportHeight;
-        bool viewportFocused;
+        float viewportWidth, viewportHeight = 0;
+        uint64_t selectedEntity = 0;
+        bool viewportFocused = false;
     };
 
     struct RenderContext
@@ -22,11 +23,11 @@ namespace Editurr
 
     struct EditurrState
     {
-        Rendurr::Input input;
-        RenderContext renderContext;
-        AssetManager assetManager;
-        UIContext uiContext;
-        Scene activeScene;
+        Rendurr::Input input{};
+        AssetManager assetManager{};
+        Scene activeScene{};
+        UIContext uiContext{};
+        RenderContext renderContext{};
     };
 
 } // namespace Editurr

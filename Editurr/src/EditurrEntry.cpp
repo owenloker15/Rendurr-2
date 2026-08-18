@@ -7,11 +7,8 @@
 #include "Render/EditurrRender.h"
 #include "Render/Framebuffer.hpp"
 #include "Render/Renderer.hpp"
-#include "Render/VertexBuffer.hpp"
 #include "Scene/AssetManager.h"
 #include "Scene/CameraController.hpp"
-#include "Scene/Material.h"
-#include "Scene/Model.h"
 #include "Scene/Texture.h"
 #include "UI/EditurrUI.h"
 #include "UI/UI.h"
@@ -53,17 +50,12 @@ int main()
                                        assetDir / "shaders" / "frag.glsl");
 
     // Editurr global state
-    Editurr::EditurrState state = {.input = {},
-                                   .renderContext = {.framebuffer = fb},
-                                   .assetManager = {},
-                                   .uiContext = {.viewportWidth = 0.0f, .viewportHeight = 0.0f},
-                                   .activeScene = {}};
+    Editurr::EditurrState state = {.renderContext = {.framebuffer = fb}};
 
-    Editurr::Entity& entity = Editurr::scene_create_entity(state.activeScene);
+    Editurr::Entity& entity = Editurr::scene_create_entity(state.activeScene, "backpack");
     const auto modelHandle =
         Editurr::model_import_from_file(state.assetManager,
                                         assetDir / "models" / "backpack" / "backpack.obj");
-    entity.name = "Backpack";
     entity.model = modelHandle;
     entity.transform = {.translation = {0.0f, 0.0f, 0.0f},
                         .rotation = {0.0f, 0.0f, 1.0f},

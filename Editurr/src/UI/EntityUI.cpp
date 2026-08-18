@@ -36,6 +36,7 @@ namespace Editurr
         if (ImGui::BeginPopupContextWindow("EntityTreeContextMenu",
                                            ImGuiPopupFlags_MouseButtonRight)) {
             if (ImGui::MenuItem("Create Entity")) {
+                scene_create_entity(state.activeScene, "entity");
                 // handle create entity
             }
 
@@ -56,11 +57,25 @@ namespace Editurr
             ImGui::EndPopup();
         }
 
+        ImGuiTreeNodeFlags flags =
+            ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
+
         for (auto& entity : state.activeScene.entities) {
-            if (ImGui::TreeNode(entity.name)) {
-                components_draw(state, entity);
+            // Embed the entity id as metadata on the tree node
+            ImGui::PushID(entity.id);
+            if (ImGui::TreeNodeEx(entity.name, flags)) {
+                // Check if the node background or label was double-clicked
+                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
+                    state.uiContext.selectedEntity = entity.id;
+                }
                 ImGui::TreePop();
             }
+            ImGui::PopID();
+        }
+
+        if (auto entity =
+                scene_find_entity_with_id(state.activeScene, state.uiContext.selectedEntity)) {
+            components_draw(state, entity.value());
         }
 
         ImGui::End();
