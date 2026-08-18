@@ -91,7 +91,6 @@ namespace Editurr
     AssetHandle model_import_from_file(AssetManager& assetManager,
                                        const std::filesystem::path& path)
     {
-        AssetHandle handle = assetManager.m_models.size();
         const std::string stringPath = path.string();
         ModelData data = {.modelFile = stringPath};
 
@@ -153,6 +152,7 @@ namespace Editurr
                 mesh_create(std::move(vertices), std::move(indices), materialHandle));
         }
 
+        const auto handle = data.handle;
         assetManager.m_models.emplace_back(std::move(data));
 
         return handle;

@@ -11,10 +11,27 @@ namespace
     {
         ImGui::Begin("Components");
 
-        ImGui::Text("Model");
-        ImGui::SameLine();
-        const auto& modelData = Editurr::asset_manager_get_model(state.assetManager, entity.model);
-        ImGui::Text(modelData.modelFile.c_str());
+        std::string previewValue = "";
+        if (Editurr::is_valid_handle(entity.model)) {
+            previewValue =
+                Editurr::asset_manager_get_model(state.assetManager, entity.model).modelFile;
+        }
+
+        // Model selector
+        if (ImGui::BeginCombo("##Model", previewValue.c_str())) {
+            for (const auto& modelData : state.assetManager.m_models) {
+                const bool selected = (modelData.handle == entity.model);
+
+                if (ImGui::Selectable(modelData.modelFile.c_str(), selected)) {
+                    entity.model = modelData.handle;
+                }
+
+                if (selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+
+            ImGui::EndCombo();
+        }
 
         ImGui::SliderFloat3("Position",
                             glm::value_ptr(entity.transform.translation),
@@ -32,50 +49,88 @@ namespace Editurr
     {
         ImGui::Begin("Entity Tree");
 
-        // Right click context menu
-        if (ImGui::BeginPopupContextWindow("EntityTreeContextMenu",
-                                           ImGuiPopupFlags_MouseButtonRight)) {
-            if (ImGui::MenuItem("Create Entity")) {
-                scene_create_entity(state.activeScene, "entity");
-                // handle create entity
+        ImGuiTreeNodeFlags flags =
+            ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
+
+        for (auto& entity : state.activeScene.entities) {
+            ImGui::PushID(entity.id);
+
+            ImGuiTreeNodeFlags node_flags = flags;
+
+            if (state.uiContext.selectedEntity == entity.id)
+                node_flags |= ImGuiTreeNodeFlags_Selected;
+
+            bool open = ImGui::TreeNodeEx(entity.name, node_flags);
+
+            // Select on left click.
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Left)) {
+                state.uiContext.selectedEntity = entity.id;
             }
 
-            if (ImGui::MenuItem("Delete Selected")) {
-                // handle delete
+            // Select and open context menu on right click.
+            if (ImGui::IsItemClicked(ImGuiMouseButton_Right)) {
+                state.uiContext.selectedEntity = entity.id;
+                ImGui::OpenPopup("EntityContextMenu");
             }
 
-            ImGui::Separator();
+            if (open) {
+                // Draw children here.
 
-            if (ImGui::MenuItem("Expand All")) {
-                // handle expand all
+                ImGui::TreePop();
             }
 
-            if (ImGui::MenuItem("Collapse All")) {
-                // handle collapse all
+            ImGui::PopID();
+        }
+
+        // Context menu for an entity.
+        if (ImGui::BeginPopup("EntityContextMenu")) {
+            if (auto entity =
+                    scene_find_entity_with_id(state.activeScene, state.uiContext.selectedEntity)) {
+                if (ImGui::MenuItem("Delete")) {
+                    scene_delete_entity(state.activeScene, state.uiContext.selectedEntity);
+                    state.uiContext.selectedEntity = INVALID_ENTITY_ID;
+                }
+
+                if (ImGui::MenuItem("Rename")) {
+                    // Rename entity.value()
+                }
             }
 
             ImGui::EndPopup();
         }
 
-        ImGuiTreeNodeFlags flags =
-            ImGuiTreeNodeFlags_OpenOnDoubleClick | ImGuiTreeNodeFlags_OpenOnArrow;
-
-        for (auto& entity : state.activeScene.entities) {
-            // Embed the entity id as metadata on the tree node
-            ImGui::PushID(entity.id);
-            if (ImGui::TreeNodeEx(entity.name, flags)) {
-                // Check if the node background or label was double-clicked
-                if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left)) {
-                    state.uiContext.selectedEntity = entity.id;
-                }
-                ImGui::TreePop();
+        // Context menu for empty space.
+        if (ImGui::BeginPopupContextWindow("EntityTreeContextMenu",
+                                           ImGuiPopupFlags_MouseButtonRight)) {
+            if (ImGui::MenuItem("Create Entity")) {
+                scene_create_entity(state.activeScene, "entity");
             }
-            ImGui::PopID();
+
+            if (ImGui::MenuItem("Delete Selected")) {
+                if (state.uiContext.selectedEntity != INVALID_ENTITY_ID) {
+                    scene_delete_entity(state.activeScene, state.uiContext.selectedEntity);
+
+                    state.uiContext.selectedEntity = INVALID_ENTITY_ID;
+                }
+            }
+
+            ImGui::Separator();
+
+            if (ImGui::MenuItem("Expand All")) {
+                // TODO
+            }
+
+            if (ImGui::MenuItem("Collapse All")) {
+                // TODO
+            }
+
+            ImGui::EndPopup();
         }
 
+        // Draw inspector for selected entity.
         if (auto entity =
                 scene_find_entity_with_id(state.activeScene, state.uiContext.selectedEntity)) {
-            components_draw(state, entity.value());
+            components_draw(state, *entity);
         }
 
         ImGui::End();

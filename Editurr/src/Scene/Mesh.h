@@ -2,12 +2,11 @@
 
 #include <vector>
 
+#include "AssetHandle.h"
 #include "Render/VertexBuffer.hpp"
 
 namespace Editurr
 {
-    typedef uint32_t AssetHandle;
-
     struct MeshData
     {
         uint32_t vaRendererId;

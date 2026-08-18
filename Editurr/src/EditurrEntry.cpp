@@ -61,6 +61,8 @@ int main()
                         .rotation = {0.0f, 0.0f, 1.0f},
                         .scale = {1.0f, 1.0f, 1.0f}};
 
+    Editurr::model_import_from_file(state.assetManager, assetDir / "models" / "cube" / "Cube.obj");
+
     Rendurr::enableDepthTesting();
 
     const auto lastFrameTime = Rendurr::time_current();

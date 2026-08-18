@@ -1,15 +1,15 @@
 #pragma once
 
-#include <filesystem>
 #include <vector>
+
+#include "AssetHandle.h"
 
 namespace Editurr
 {
-    typedef uint32_t AssetHandle;
-
     struct MaterialData
     {
         std::vector<AssetHandle> textureHandles;
+        AssetHandle handle = generate_asset_handle();
     };
 
 } // namespace Editurr

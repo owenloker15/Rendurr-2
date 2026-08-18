@@ -1,19 +1,16 @@
 #pragma once
 
-#include <vector>
-
 #include "Material.h"
 #include "Model.h"
 #include "Render/Texture.hpp"
+#include "Texture.h"
 
 namespace Editurr
 {
-    typedef uint32_t AssetHandle;
-
     struct AssetManager
     {
         std::vector<MaterialData> m_materials{};
-        std::vector<Rendurr::TextureData> m_textures{};
+        std::vector<Texture> m_textures{};
         std::vector<ModelData> m_models{};
     };
 
@@ -31,8 +28,7 @@ namespace Editurr
     AssetHandle texture_create(AssetManager& assetManager,
                                const std::filesystem::path& path,
                                Rendurr::TextureType type);
-    const Rendurr::TextureData& asset_manager_get_texture(const AssetManager& assetManager,
-                                                          AssetHandle handle);
+    const Texture& asset_manager_get_texture(const AssetManager& assetManager, AssetHandle handle);
     // TEXTURES END
 
     // MODELS BEGIN

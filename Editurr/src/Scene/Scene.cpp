@@ -8,13 +8,20 @@ namespace Editurr
         return e;
     }
 
-    std::optional<Entity> scene_find_entity_with_id(Scene& scene, uint64_t id)
+    void scene_delete_entity(Scene& scene, uint64_t id)
     {
-        for (const auto& entity : scene.entities) {
+        std::erase_if(scene.entities, [id](const Entity& entity) {
+            return entity.id == id;
+        });
+    }
+
+    Entity* scene_find_entity_with_id(Scene& scene, uint64_t id)
+    {
+        for (auto& entity : scene.entities) {
             if (entity.id == id) {
-                return entity;
+                return &entity;
             }
         }
-        return std::nullopt;
+        return nullptr;
     }
 } // namespace Editurr

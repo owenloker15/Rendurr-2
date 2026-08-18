@@ -13,6 +13,8 @@ namespace Editurr
 
     Entity& scene_create_entity(Scene& scene, const char* name);
 
-    std::optional<Entity> scene_find_entity_with_id(Scene& scene, uint64_t id);
+    void scene_delete_entity(Scene& scene, uint64_t id);
+
+    Entity* scene_find_entity_with_id(Scene& scene, uint64_t id);
 
 } // namespace Editurr

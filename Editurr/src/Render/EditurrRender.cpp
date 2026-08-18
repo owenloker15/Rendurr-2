@@ -16,8 +16,8 @@ namespace
         const auto& materialData =
             asset_manager_get_material(assetManager, meshData.materialHandle);
         for (const auto& textureId : materialData.textureHandles) {
-            const auto& textureData = asset_manager_get_texture(assetManager, textureId);
-            Rendurr::upload_texture_to_shader(textureData, shader);
+            const auto& texture = asset_manager_get_texture(assetManager, textureId);
+            Rendurr::upload_texture_to_shader(texture.textureData, shader);
         }
         Rendurr::drawIndexed(meshData.vaRendererId, meshData.indexCount);
     }
@@ -49,9 +49,11 @@ namespace Editurr
             // End transform
 
             // Begin Model
-            const auto& modelData = asset_manager_get_model(assetManager, entity.model);
-            for (const auto& meshData : modelData.meshes) {
-                render_mesh(assetManager, shader, meshData);
+            if (is_valid_handle(entity.model)) {
+                const auto& modelData = asset_manager_get_model(assetManager, entity.model);
+                for (const auto& meshData : modelData.meshes) {
+                    render_mesh(assetManager, shader, meshData);
+                }
             }
             // End Model
         }

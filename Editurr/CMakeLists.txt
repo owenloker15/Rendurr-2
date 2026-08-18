@@ -23,6 +23,7 @@ set(EDITURR_SOURCES
     src/Render/EditurrRender.h
     src/Render/EditurrRender.cpp
 
+    src/Scene/AssetHandle.h
     src/Scene/AssetManager.h
     src/Scene/AssetManager.cpp
     src/Scene/Entity.h
@@ -34,7 +35,6 @@ set(EDITURR_SOURCES
     src/Scene/Scene.h
     src/Scene/Scene.cpp
     src/Scene/Texture.h
-    src/Scene/Texture.cpp
 
     src/UI/EditurrUI.h
     src/UI/EditurrUI.cpp

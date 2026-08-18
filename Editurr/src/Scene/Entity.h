@@ -1,7 +1,8 @@
 #pragma once
 
+#include <glm/vec3.hpp>
+
 #include "AssetManager.h"
-#include "glm/vec3.hpp"
 
 namespace Editurr
 {
@@ -18,7 +19,7 @@ namespace Editurr
     {
         uint64_t id;
         const char* name;
-        AssetHandle model;
+        AssetHandle model = INVALID_ENTITY_ID;
         Transform transform;
     };
 } // namespace Editurr

@@ -10,6 +10,7 @@ namespace Editurr
     {
         std::vector<MeshData> meshes{};
         std::string modelFile;
+        AssetHandle handle = generate_asset_handle();
     };
 
 } // namespace Editurr
