@@ -11,7 +11,7 @@ namespace
     {
         ImGui::Begin("Components");
 
-        std::string previewValue = "";
+        std::string previewValue;
         if (Editurr::is_valid_handle(entity.model)) {
             previewValue =
                 Editurr::asset_manager_get_model(state.assetManager, entity.model).modelFile;

@@ -80,9 +80,33 @@ target_link_libraries(imgui PUBLIC
 # Add ImGui to ThirdParty folder in Visual Studio
 set_target_properties(imgui PROPERTIES FOLDER "ThirdParty")
 
-# Link publicly (all things liking to this will inherit)
+# ImGuizmo
+add_library(imguizmo STATIC
+    ${THIRDPARTY_DIR}/imguizmo/src/ImGuizmo.cpp
+    ${THIRDPARTY_DIR}/imguizmo/src/GraphEditor.cpp
+    ${THIRDPARTY_DIR}/imguizmo/src/ImCurveEdit.cpp
+    ${THIRDPARTY_DIR}/imguizmo/src/ImGradient.cpp
+    ${THIRDPARTY_DIR}/imguizmo/src/ImSequencer.cpp
+    ${THIRDPARTY_DIR}/imguizmo/src/ImVectorEditor.cpp
+)
+
+# Set ImGuizmo public include directories
+target_include_directories(imguizmo PUBLIC
+    ${THIRDPARTY_DIR}/imguizmo/src
+)
+
+# Link ImGuizmo to libraries
+target_link_libraries(imguizmo PUBLIC
+    imgui
+)
+
+# Add ImGuizmo to ThirdParty folder in Visual Studio
+set_target_properties(imguizmo PROPERTIES FOLDER "ThirdParty")
+
+# Link publicly (all things linking to this will inherit)
 target_link_libraries(Rendurr PUBLIC 
     imgui
+    imguizmo
 )
 
 target_link_libraries(Rendurr PRIVATE 

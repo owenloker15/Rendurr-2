@@ -64,4 +64,8 @@ add_custom_command(TARGET Editurr POST_BUILD
 )
 
 # Link libraries
-target_link_libraries(Editurr PRIVATE Rendurr assimp spdlog)
+target_link_libraries(Editurr PRIVATE
+    Rendurr
+    assimp
+    spdlog
+)
