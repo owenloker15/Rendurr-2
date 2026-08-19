@@ -2,7 +2,7 @@
 
 #include <filesystem>
 
-namespace Rendurr
+namespace rnd
 {
     struct AssetManager;
 
@@ -56,4 +56,4 @@ namespace Rendurr
         return {};
     }
 
-} // namespace Rendurr
+} // namespace rnd

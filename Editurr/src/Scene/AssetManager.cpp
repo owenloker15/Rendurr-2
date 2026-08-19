@@ -48,7 +48,7 @@ namespace Editurr
 
     AssetHandle texture_create(AssetManager& assetManager,
                                const std::filesystem::path& path,
-                               Rendurr::TextureType type)
+                               rnd::TextureType type)
     {
         Texture texture{.textureData = texture_create(path, type)};
         const auto handle = texture.handle;

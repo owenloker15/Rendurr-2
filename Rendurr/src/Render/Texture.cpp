@@ -6,7 +6,7 @@
 
 #include "Core/Log.h"
 
-namespace Rendurr
+namespace rnd
 {
     TextureData texture_create(const std::filesystem::path& path, TextureType type)
     {
@@ -78,4 +78,4 @@ namespace Rendurr
         glBindTextureUnit(textureSlot, data.rendererId);
     }
 
-} // namespace Rendurr
+} // namespace rnd

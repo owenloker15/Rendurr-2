@@ -18,7 +18,7 @@ namespace Editurr
         AssetHandle materialHandle;
     };
 
-    MeshData mesh_create(std::vector<Rendurr::Vertex>&& vertices,
+    MeshData mesh_create(std::vector<rnd::Vertex>&& vertices,
                          std::vector<uint32_t>&& indices,
                          AssetHandle materialHandle);
     void mesh_destroy(AssetHandle handle);

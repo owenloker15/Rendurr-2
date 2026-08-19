@@ -4,7 +4,7 @@
 #include "IndexBuffer.hpp"
 #include "VertexBuffer.hpp"
 
-namespace Rendurr
+namespace rnd
 {
     struct VertexArrayData
     {
@@ -20,4 +20,4 @@ namespace Rendurr
     void vertex_array_bind(uint32_t rendererId);
     void vertex_array_unbind();
 
-} // namespace Rendurr
+} // namespace rnd

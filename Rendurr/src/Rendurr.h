@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Rendurr
+namespace rnd
 {
     void init();
 }

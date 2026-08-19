@@ -17,7 +17,7 @@ namespace
     void load_material_textures(Editurr::AssetManager& assetManager,
                                 aiMaterial* aiMat,
                                 aiTextureType assimpType,
-                                Rendurr::TextureType textureType,
+                                rnd::TextureType textureType,
                                 const std::filesystem::path& modelDirectory,
                                 Editurr::AssetHandle materialHandle)
     {
@@ -54,28 +54,28 @@ namespace
             load_material_textures(assetManager,
                                    aiMat,
                                    aiTextureType_DIFFUSE,
-                                   Rendurr::TextureType::Diffuse,
+                                   rnd::TextureType::Diffuse,
                                    modelDirectory,
                                    materialHandle);
 
             load_material_textures(assetManager,
                                    aiMat,
                                    aiTextureType_SPECULAR,
-                                   Rendurr::TextureType::Specular,
+                                   rnd::TextureType::Specular,
                                    modelDirectory,
                                    materialHandle);
 
             load_material_textures(assetManager,
                                    aiMat,
                                    aiTextureType_NORMALS,
-                                   Rendurr::TextureType::Normal,
+                                   rnd::TextureType::Normal,
                                    modelDirectory,
                                    materialHandle);
 
             load_material_textures(assetManager,
                                    aiMat,
                                    aiTextureType_AMBIENT,
-                                   Rendurr::TextureType::Ambient,
+                                   rnd::TextureType::Ambient,
                                    modelDirectory,
                                    materialHandle);
 
@@ -116,11 +116,11 @@ namespace Editurr
         for (uint32_t meshIndex = 0; meshIndex < scene->mNumMeshes; ++meshIndex) {
             aiMesh* mesh = scene->mMeshes[meshIndex];
 
-            std::vector<Rendurr::Vertex> vertices;
+            std::vector<rnd::Vertex> vertices;
             std::vector<uint32_t> indices;
 
             for (uint32_t i = 0; i < mesh->mNumVertices; ++i) {
-                Rendurr::Vertex vertex{};
+                rnd::Vertex vertex{};
 
                 vertex.position = {mesh->mVertices[i].x,
                                    mesh->mVertices[i].y,

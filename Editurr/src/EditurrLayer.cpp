@@ -95,15 +95,15 @@ namespace
 namespace Editurr
 {
     EditurrLayer::EditurrLayer(std::string name)
-        : m_cameraController(1280.0 / 720, 5.0, Rendurr::ProjectionType::Ortho), Layer(name)
+        : m_cameraController(1280.0 / 720, 5.0, rnd::ProjectionType::Ortho), Layer(name)
     {
         Editurr::getInstance().setActiveScene(Editurr::getInstance().createScene());
 
         const std::filesystem::path assetDir(EDITURR_ASSETS_DIR);
-        m_shaderHandle = Rendurr::shader_program_create(assetDir / "shaders" / "vertex.glsl",
+        m_shaderHandle = rnd::shader_program_create(assetDir / "shaders" / "vertex.glsl",
                                                         assetDir / "shaders" / "frag.glsl");
 
-        std::vector<Rendurr::Vertex> vertices = {
+        std::vector<rnd::Vertex> vertices = {
             // Front face
             {{-0.5f, -0.5f, 0.5f}, {0, 0, 1}, {0, 0}},
             {{0.5f, -0.5f, 0.5f}, {0, 0, 1}, {1, 0}},
@@ -150,36 +150,36 @@ namespace Editurr
             20, 22, 21, 22, 20, 23  // Bottom
         };
 
-        std::shared_ptr<Rendurr::Scene> pActiveScene = Editurr::getInstance().getActiveScene();
+        std::shared_ptr<rnd::Scene> pActiveScene = Editurr::getInstance().getActiveScene();
 
-        Rendurr::Entity entity = pActiveScene->createEntity();
+        rnd::Entity entity = pActiveScene->createEntity();
 
-        Rendurr::MaterialHandle materialHandle = Rendurr::material_create(m_assetManager);
-        const Rendurr::TextureHandle textureHandle =
-            Rendurr::texture_create(m_assetManager,
+        rnd::MaterialHandle materialHandle = rnd::material_create(m_assetManager);
+        const rnd::TextureHandle textureHandle =
+            rnd::texture_create(m_assetManager,
                                     assetDir / "textures" / "wall.jpg",
-                                    Rendurr::TextureType::Ambient);
-        Rendurr::material_add_texture(m_assetManager, materialHandle, textureHandle);
+                                    rnd::TextureType::Ambient);
+        rnd::material_add_texture(m_assetManager, materialHandle, textureHandle);
 
-        const Rendurr::MeshHandle meshHandle = Rendurr::mesh_create(m_assetManager,
+        const rnd::MeshHandle meshHandle = rnd::mesh_create(m_assetManager,
                                                                     std::move(vertices),
                                                                     std::move(indices),
                                                                     materialHandle);
 
-        Rendurr::MeshComponent meshComponent(meshHandle);
+        rnd::MeshComponent meshComponent(meshHandle);
         pActiveScene->addComponent(entity, std::move(meshComponent));
 
-        Rendurr::TransformComponent transformComponent({0.0f, 0.0f, 0.0f},
+        rnd::TransformComponent transformComponent({0.0f, 0.0f, 0.0f},
                                                        {0.0f, 0.0f, 1.0f},
                                                        {1.0f, 1.0f, 1.0f});
         pActiveScene->addComponent(entity, std::move(transformComponent));
 
-        Rendurr::FramebufferSpecification spec;
-        spec.width = Rendurr::Application::getInstance().getWindow()->getWidth();
-        spec.height = Rendurr::Application::getInstance().getWindow()->getHeight();
-        spec.m_colorAttachments = {{"color", Rendurr::ColorAttachmentFormat::RGBA8},
-                                   {"red", Rendurr::ColorAttachmentFormat::RGBA8}};
-        m_pFramebuffer = std::make_unique<Rendurr::Framebuffer>(spec);
+        rnd::FramebufferSpecification spec;
+        spec.width = rnd::Application::getInstance().getWindow()->getWidth();
+        spec.height = rnd::Application::getInstance().getWindow()->getHeight();
+        spec.m_colorAttachments = {{"color", rnd::ColorAttachmentFormat::RGBA8},
+                                   {"red", rnd::ColorAttachmentFormat::RGBA8}};
+        m_pFramebuffer = std::make_unique<rnd::Framebuffer>(spec);
     }
 
     void EditurrLayer::onAttach() {}
@@ -188,21 +188,21 @@ namespace Editurr
     {
         m_pFramebuffer->bind();
 
-        Rendurr::Renderer::setClearColor({1.0f, 1.0f, 1.0f, 1.0f});
-        Rendurr::Renderer::clear();
+        rnd::Renderer::setClearColor({1.0f, 1.0f, 1.0f, 1.0f});
+        rnd::Renderer::clear();
 
         glm::mat4 viewMatrix = m_cameraController.getViewMatrix();
         glm::mat4 projectionMatrix = m_cameraController.getProjectionMatrix();
-        Rendurr::CameraUniform cameraUniform{viewMatrix, projectionMatrix};
+        rnd::CameraUniform cameraUniform{viewMatrix, projectionMatrix};
 
-        Rendurr::shader_program_upload_uniform(m_shaderHandle, std::move(cameraUniform));
+        rnd::shader_program_upload_uniform(m_shaderHandle, std::move(cameraUniform));
 
         glm::mat4 transform = glm::mat4(1.0f);
         transform = glm::translate(transform, {0.0f, 0.0f, 0.0f});
         transform = glm::rotate(transform, dt, glm::vec3(0.0f, 0.0f, 1.0f));
 
         // todo Unsafe
-        Rendurr::Renderer::drawScene(Editurr::getInstance().getActiveScene(),
+        rnd::Renderer::drawScene(Editurr::getInstance().getActiveScene(),
                                      m_assetManager,
                                      m_shaderHandle);
         m_pFramebuffer->unbind();
@@ -215,7 +215,7 @@ namespace Editurr
         if (ImGui::BeginMenuBar()) {
             if (ImGui::BeginMenu("File")) {
                 if (ImGui::MenuItem("Exit")) {
-                    Rendurr::Application::getInstance().close();
+                    rnd::Application::getInstance().close();
                 }
                 ImGui::EndMenu();
             }

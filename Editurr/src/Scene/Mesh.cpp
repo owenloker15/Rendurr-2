@@ -5,12 +5,12 @@
 namespace Editurr
 {
 
-    MeshData mesh_create(std::vector<Rendurr::Vertex>&& vertices,
+    MeshData mesh_create(std::vector<rnd::Vertex>&& vertices,
                          std::vector<uint32_t>&& indices,
                          AssetHandle materialHandle)
     {
-        Rendurr::VertexArrayData vaData =
-            Rendurr::vertex_array_create(std::move(vertices), std::move(indices));
+        rnd::VertexArrayData vaData =
+            rnd::vertex_array_create(std::move(vertices), std::move(indices));
 
         return MeshData{.vaRendererId = vaData.rendererId,
                         .vbRendererId = vaData.vbData.rendererId,

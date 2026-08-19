@@ -5,7 +5,7 @@
 #include <unordered_map>
 #include <vector>
 
-namespace Rendurr
+namespace rnd
 {
     enum class ColorAttachmentFormat
     {
@@ -51,4 +51,4 @@ namespace Rendurr
     void framebuffer_resize(Framebuffer& fb, uint32_t width, uint32_t height);
 
     uint32_t framebuffer_get_color_attachment(Framebuffer& fb, const std::string& key);
-} // namespace Rendurr
+} // namespace rnd

@@ -5,7 +5,7 @@
 #include "Shader.hpp"
 #include "Texture.hpp"
 
-namespace Rendurr
+namespace rnd
 {
 
     void clear();
@@ -16,4 +16,4 @@ namespace Rendurr
 
     void upload_texture_to_shader(const TextureData& texture, const ShaderData& shader);
     void drawIndexed(uint32_t vertexArrayRendererId, uint32_t indexCount);
-} // namespace Rendurr
+} // namespace rnd

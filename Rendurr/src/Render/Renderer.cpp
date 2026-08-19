@@ -94,7 +94,7 @@ namespace
     }
 } // namespace
 
-namespace Rendurr
+namespace rnd
 {
     void clear()
     {
@@ -143,4 +143,4 @@ namespace Rendurr
         shader_uniform_upload_int(shader, uniformName, textureSlot);
     }
 
-} // namespace Rendurr
+} // namespace rnd

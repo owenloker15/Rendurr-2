@@ -17,36 +17,36 @@
 int main()
 {
     // Initialize Rendurr library
-    Rendurr::init();
+    rnd::init();
 
     // Initialize objects
 
     // Window
-    Rendurr::WindowSpec windowSpec = {.title = "Editurr", .width = 1280, .height = 720};
-    Rendurr::Window window = Rendurr::window_create(windowSpec);
+    rnd::WindowSpec windowSpec = {.title = "Editurr", .width = 1280, .height = 720};
+    rnd::Window window = rnd::window_create(windowSpec);
 
     // UI
     Editurr::ui_init(window);
 
     // Framebuffer
-    Rendurr::FramebufferSpecification spec = {
+    rnd::FramebufferSpecification spec = {
         .width = window.specification.width,
         .height = window.specification.height,
-        .attachments = {{.key = "color", .format = Rendurr::ColorAttachmentFormat::RGBA8},
-                        {.key = "red", .format = Rendurr::ColorAttachmentFormat::RGBA8}}};
-    Rendurr::Framebuffer fb = Rendurr::framebuffer_create(spec);
+        .attachments = {{.key = "color", .format = rnd::ColorAttachmentFormat::RGBA8},
+                        {.key = "red", .format = rnd::ColorAttachmentFormat::RGBA8}}};
+    rnd::Framebuffer fb = rnd::framebuffer_create(spec);
 
     // Log
 
     // Camera
-    Rendurr::CameraController cameraController = {1280.0 / 720,
+    rnd::CameraController cameraController = {1280.0 / 720,
                                                   5.0,
-                                                  Rendurr::ProjectionType::Ortho};
+                                                  rnd::ProjectionType::Ortho};
 
     // Shader
     const std::filesystem::path assetDir(EDITURR_ASSETS_DIR);
-    const Rendurr::ShaderData shader =
-        Rendurr::shader_program_create(assetDir / "shaders" / "vertex.glsl",
+    const rnd::ShaderData shader =
+        rnd::shader_program_create(assetDir / "shaders" / "vertex.glsl",
                                        assetDir / "shaders" / "frag.glsl");
 
     // Editurr global state
@@ -63,18 +63,18 @@ int main()
 
     Editurr::model_import_from_file(state.assetManager, assetDir / "models" / "cube" / "Cube.obj");
 
-    Rendurr::enableDepthTesting();
+    rnd::enableDepthTesting();
 
-    const auto lastFrameTime = Rendurr::time_current();
+    const auto lastFrameTime = rnd::time_current();
 
     while (!state.input.windowCloseRequested) {
         // Frame time delta
-        const auto currentFrameTime = Rendurr::time_current();
-        const auto dt = Rendurr::time_delta(currentFrameTime, lastFrameTime);
+        const auto currentFrameTime = rnd::time_current();
+        const auto dt = rnd::time_delta(currentFrameTime, lastFrameTime);
 
         // Event polling
-        Rendurr::poll_events();
-        Rendurr::window_retrieve_events(window, state.input);
+        rnd::poll_events();
+        rnd::window_retrieve_events(window, state.input);
 
         // Process inputs
 
@@ -85,29 +85,29 @@ int main()
         const glm::mat4 viewMatrix = cameraController.getViewMatrix();
         const glm::mat4 projectionMatrix = cameraController.getProjectionMatrix();
         const glm::vec3& cameraPos = cameraController.cameraPos();
-        Rendurr::shader_uniform_upload_mat4(shader, "u_ViewMatrix", viewMatrix);
-        Rendurr::shader_uniform_upload_mat4(shader, "u_ProjectionMatrix", projectionMatrix);
-        Rendurr::shader_uniform_upload_vec3(shader, "u_ViewPos", cameraPos);
+        rnd::shader_uniform_upload_mat4(shader, "u_ViewMatrix", viewMatrix);
+        rnd::shader_uniform_upload_mat4(shader, "u_ProjectionMatrix", projectionMatrix);
+        rnd::shader_uniform_upload_vec3(shader, "u_ViewPos", cameraPos);
 
         // TODO light
-        Rendurr::shader_uniform_upload_vec3(shader, "light.position", {0.0f, 0.0f, 3.0f});
-        Rendurr::shader_uniform_upload_vec3(shader, "light.ambient", {0.2f, 0.2f, 0.2f});
-        Rendurr::shader_uniform_upload_vec3(shader, "light.diffuse", {0.5f, 0.5f, 0.5f});
-        Rendurr::shader_uniform_upload_vec3(shader, "light.specular", {1.0f, 1.0f, 1.0f});
+        rnd::shader_uniform_upload_vec3(shader, "light.position", {0.0f, 0.0f, 3.0f});
+        rnd::shader_uniform_upload_vec3(shader, "light.ambient", {0.2f, 0.2f, 0.2f});
+        rnd::shader_uniform_upload_vec3(shader, "light.diffuse", {0.5f, 0.5f, 0.5f});
+        rnd::shader_uniform_upload_vec3(shader, "light.specular", {1.0f, 1.0f, 1.0f});
 
         // TODO material
         // TODO hardcoded to texture slot 0
 
         // Render to framebuffer
-        Rendurr::framebuffer_bind(state.renderContext.framebuffer);
+        rnd::framebuffer_bind(state.renderContext.framebuffer);
 
-        Rendurr::setClearColor({0.1f, 0.1f, 0.1f, 1.0f});
-        Rendurr::clear();
+        rnd::setClearColor({0.1f, 0.1f, 0.1f, 1.0f});
+        rnd::clear();
 
         // todo Unsafe
         // todo pass in state?
         render_scene(state.activeScene, state.assetManager, shader);
-        Rendurr::framebuffer_unbind();
+        rnd::framebuffer_unbind();
 
         // UI rendering
         Editurr::ui_frame_begin();
@@ -116,10 +116,10 @@ int main()
         // Present frame? currently just done in ui_frame_end
 
         // Swap window buffers
-        Rendurr::window_swap_buffers(window);
+        rnd::window_swap_buffers(window);
     }
 
     Editurr::ui_shutdown();
-    Rendurr::window_destroy(window);
+    rnd::window_destroy(window);
     return 0;
 }

@@ -18,12 +18,12 @@ namespace Editurr
 
     struct RenderContext
     {
-        Rendurr::Framebuffer framebuffer;
+        rnd::Framebuffer framebuffer;
     };
 
     struct EditurrState
     {
-        Rendurr::Input input{};
+        rnd::Input input{};
         AssetManager assetManager{};
         Scene activeScene{};
         UIContext uiContext{};

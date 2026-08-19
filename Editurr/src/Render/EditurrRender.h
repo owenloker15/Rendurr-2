@@ -8,5 +8,5 @@ namespace Editurr
 {
     void render_scene(const Scene& scene,
                       const AssetManager& assetManager,
-                      const Rendurr::ShaderData& shader);
+                      const rnd::ShaderData& shader);
 }

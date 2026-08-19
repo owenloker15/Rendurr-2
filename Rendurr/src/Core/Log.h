@@ -2,7 +2,7 @@
 
 #include <spdlog/spdlog.h>
 
-namespace Rendurr
+namespace rnd
 {
     class Log
     {
@@ -23,7 +23,7 @@ namespace Rendurr
         static std::shared_ptr<spdlog::logger> s_coreLogger;
         static std::shared_ptr<spdlog::logger> s_clientLogger;
     };
-} // namespace Rendurr
+} // namespace rnd
 
 #ifdef RND_ENABLE_ASSERTS
 
@@ -56,14 +56,14 @@ namespace Rendurr
 #define RND_ASSERT(condition, ...)
 
 #endif
-#define RND_CORE_TRACE(...) ::Rendurr::Log::GetCoreLogger()->trace(__VA_ARGS__)
-#define RND_CORE_INFO(...) ::Rendurr::Log::GetCoreLogger()->info(__VA_ARGS__)
-#define RND_CORE_WARN(...) ::Rendurr::Log::GetCoreLogger()->warn(__VA_ARGS__)
-#define RND_CORE_ERROR(...) ::Rendurr::Log::GetCoreLogger()->error(__VA_ARGS__)
-#define RND_CORE_CRITICAL(...) ::Rendurr::Log::GetCoreLogger()->critical(__VA_ARGS__)
+#define RND_CORE_TRACE(...) ::rnd::Log::GetCoreLogger()->trace(__VA_ARGS__)
+#define RND_CORE_INFO(...) ::rnd::Log::GetCoreLogger()->info(__VA_ARGS__)
+#define RND_CORE_WARN(...) ::rnd::Log::GetCoreLogger()->warn(__VA_ARGS__)
+#define RND_CORE_ERROR(...) ::rnd::Log::GetCoreLogger()->error(__VA_ARGS__)
+#define RND_CORE_CRITICAL(...) ::rnd::Log::GetCoreLogger()->critical(__VA_ARGS__)
 
-#define RND_TRACE(...) ::Rendurr::Log::GetClientLogger()->trace(__VA_ARGS__)
-#define RND_INFO(...) ::Rendurr::Log::GetClientLogger()->info(__VA_ARGS__)
-#define RND_WARN(...) ::Rendurr::Log::GetClientLogger()->warn(__VA_ARGS__)
-#define RND_ERROR(...) ::Rendurr::Log::GetClientLogger()->error(__VA_ARGS__)
-#define RND_CRITICAL(...) ::Rendurr::Log::GetClientLogger()->critical(__VA_ARGS__)
+#define RND_TRACE(...) ::rnd::Log::GetClientLogger()->trace(__VA_ARGS__)
+#define RND_INFO(...) ::rnd::Log::GetClientLogger()->info(__VA_ARGS__)
+#define RND_WARN(...) ::rnd::Log::GetClientLogger()->warn(__VA_ARGS__)
+#define RND_ERROR(...) ::rnd::Log::GetClientLogger()->error(__VA_ARGS__)
+#define RND_CRITICAL(...) ::rnd::Log::GetClientLogger()->critical(__VA_ARGS__)

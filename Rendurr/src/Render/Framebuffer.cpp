@@ -6,10 +6,10 @@
 
 namespace
 {
-    void gl_format(Rendurr::ColorAttachmentFormat fmt, GLint* internal, GLenum* format)
+    void gl_format(rnd::ColorAttachmentFormat fmt, GLint* internal, GLenum* format)
     {
         switch (fmt) {
-            case Rendurr::ColorAttachmentFormat::RGBA8:
+            case rnd::ColorAttachmentFormat::RGBA8:
                 *internal = GL_RGBA8;
                 *format = GL_RGBA;
                 break;
@@ -22,7 +22,7 @@ namespace
         }
     }
 
-    void framebuffer_destroy_internal(Rendurr::Framebuffer& fb)
+    void framebuffer_destroy_internal(rnd::Framebuffer& fb)
     {
         if (fb.rendererId)
             glDeleteFramebuffers(1, &fb.rendererId);
@@ -34,7 +34,7 @@ namespace
             glDeleteRenderbuffers(1, &fb.depthAttachment);
     }
 
-    void framebuffer_build(Rendurr::Framebuffer& fb)
+    void framebuffer_build(rnd::Framebuffer& fb)
     {
         fb.colorAttachmentIndex = 0;
 
@@ -96,7 +96,7 @@ namespace
     }
 } // namespace
 
-namespace Rendurr
+namespace rnd
 {
     Framebuffer framebuffer_create(const FramebufferSpecification& spec)
     {
@@ -165,4 +165,4 @@ namespace Rendurr
 
         return it->second;
     }
-} // namespace Rendurr
+} // namespace rnd

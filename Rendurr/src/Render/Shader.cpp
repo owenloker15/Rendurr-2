@@ -44,7 +44,7 @@ namespace
     }
 } // namespace
 
-namespace Rendurr
+namespace rnd
 {
     ShaderData shader_program_create(const std::filesystem::path& vertexFilePath,
                                      const std::filesystem::path& fragmentFilePath)
@@ -158,4 +158,4 @@ namespace Rendurr
         GLint location = getUniformLocation(shader.rendererId, uniformName);
         glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
     }
-} // namespace Rendurr
+} // namespace rnd

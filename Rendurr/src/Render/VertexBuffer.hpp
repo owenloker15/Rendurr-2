@@ -3,7 +3,7 @@
 #include <glm/vec3.hpp>
 #include <vector>
 
-namespace Rendurr
+namespace rnd
 {
     struct Vertex
     {
@@ -20,4 +20,4 @@ namespace Rendurr
     VertexBufferData vertex_buffer_create(std::vector<Vertex>&& vertices);
     void vertex_buffer_destroy(uint32_t rendererId);
 
-} // namespace Rendurr
+} // namespace rnd

@@ -3,7 +3,7 @@
 
 namespace Editurr
 {
-    void ui_init(Rendurr::Window& window);
+    void ui_init(rnd::Window& window);
     void ui_shutdown();
 
     void ui_frame_begin();

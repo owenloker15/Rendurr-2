@@ -23,11 +23,11 @@ namespace Editurr
 
         if (newWidth != state.renderContext.framebuffer.width ||
             newHeight != state.renderContext.framebuffer.height) {
-            Rendurr::framebuffer_resize(state.renderContext.framebuffer, newWidth, newHeight);
+            rnd::framebuffer_resize(state.renderContext.framebuffer, newWidth, newHeight);
         }
 
         uint32_t colorAttachmentTexture =
-            Rendurr::framebuffer_get_color_attachment(state.renderContext.framebuffer, "color");
+            rnd::framebuffer_get_color_attachment(state.renderContext.framebuffer, "color");
         ImGui::Image(colorAttachmentTexture,
                      ImVec2{state.uiContext.viewportWidth, state.uiContext.viewportHeight},
                      ImVec2(0, 1),

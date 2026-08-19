@@ -4,7 +4,7 @@
 
 #include "Core/Log.h"
 
-namespace Rendurr
+namespace rnd
 {
     namespace Utils
     {
@@ -22,4 +22,4 @@ namespace Rendurr
             return s;
         }
     } // namespace Utils
-} // namespace Rendurr
+} // namespace rnd

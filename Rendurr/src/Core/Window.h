@@ -4,7 +4,7 @@
 
 #include "Input.h"
 
-namespace Rendurr
+namespace rnd
 {
     struct WindowSpec
     {
@@ -26,4 +26,4 @@ namespace Rendurr
 
     void poll_events();
 
-} // namespace Rendurr
+} // namespace rnd

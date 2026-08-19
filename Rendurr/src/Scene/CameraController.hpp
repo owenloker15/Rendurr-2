@@ -4,7 +4,7 @@
 #include "Camera.hpp"
 #include "Core/Input.h"
 
-namespace Rendurr
+namespace rnd
 {
     class CameraController
     {
@@ -31,4 +31,4 @@ namespace Rendurr
         bool m_panning = false;
         bool m_rotating = false;
     };
-} // namespace Rendurr
+} // namespace rnd

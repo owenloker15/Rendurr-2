@@ -13,7 +13,7 @@
 
 namespace Editurr
 {
-    class EditurrLayer : public Rendurr::Layer
+    class EditurrLayer : public rnd::Layer
     {
     public:
         EditurrLayer(std::string name);
@@ -23,10 +23,10 @@ namespace Editurr
         void onUiRender() override;
 
     private:
-        Rendurr::AssetManager m_assetManager;
-        Rendurr::CameraController m_cameraController;
-        std::unique_ptr<Rendurr::Framebuffer> m_pFramebuffer;
-        Rendurr::ShaderHandle m_shaderHandle;
+        rnd::AssetManager m_assetManager;
+        rnd::CameraController m_cameraController;
+        std::unique_ptr<rnd::Framebuffer> m_pFramebuffer;
+        rnd::ShaderHandle m_shaderHandle;
         glm::vec2 m_viewportSize;
     };
 } // namespace Editurr

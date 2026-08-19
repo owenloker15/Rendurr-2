@@ -6,7 +6,7 @@
 
 namespace Editurr
 {
-    void ui_init(Rendurr::Window& window)
+    void ui_init(rnd::Window& window)
     {
         ImGui::CreateContext();
         ImGuiIO& io = ImGui::GetIO();

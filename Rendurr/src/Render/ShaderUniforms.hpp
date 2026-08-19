@@ -3,7 +3,7 @@
 #include <glm/mat4x4.hpp>
 #include <string>
 
-namespace Rendurr
+namespace rnd
 {
     /*
     class CameraUniform
@@ -41,4 +41,4 @@ namespace Rendurr
         uint32_t m_textureSlot;
     };
 */
-} // namespace Rendurr
+} // namespace rnd

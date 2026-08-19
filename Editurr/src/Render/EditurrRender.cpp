@@ -10,16 +10,16 @@
 namespace
 {
     void render_mesh(const Editurr::AssetManager& assetManager,
-                     const Rendurr::ShaderData& shader,
+                     const rnd::ShaderData& shader,
                      const Editurr::MeshData& meshData)
     {
         const auto& materialData =
             asset_manager_get_material(assetManager, meshData.materialHandle);
         for (const auto& textureId : materialData.textureHandles) {
             const auto& texture = asset_manager_get_texture(assetManager, textureId);
-            Rendurr::upload_texture_to_shader(texture.textureData, shader);
+            rnd::upload_texture_to_shader(texture.textureData, shader);
         }
-        Rendurr::drawIndexed(meshData.vaRendererId, meshData.indexCount);
+        rnd::drawIndexed(meshData.vaRendererId, meshData.indexCount);
     }
 } // namespace
 
@@ -27,9 +27,9 @@ namespace Editurr
 {
     void render_scene(const Scene& scene,
                       const AssetManager& assetManager,
-                      const Rendurr::ShaderData& shader)
+                      const rnd::ShaderData& shader)
     {
-        Rendurr::shader_program_use(shader);
+        rnd::shader_program_use(shader);
 
         for (const auto& entity : scene.entities) {
             // Transform
@@ -45,7 +45,7 @@ namespace Editurr
                                     glm::radians(entity.transform.rotation.z),
                                     glm::vec3(0.0f, 0.0f, 1.0f));
             transform = glm::scale(transform, entity.transform.scale);
-            Rendurr::shader_uniform_upload_mat4(shader, "u_Transform", transform);
+            rnd::shader_uniform_upload_mat4(shader, "u_Transform", transform);
             // End transform
 
             // Begin Model

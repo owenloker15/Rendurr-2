@@ -2,7 +2,7 @@
 
 #include <chrono>
 
-namespace Rendurr
+namespace rnd
 {
     inline std::chrono::time_point<std::chrono::high_resolution_clock> time_current()
     {
@@ -14,4 +14,4 @@ namespace Rendurr
     {
         return (a - b).count();
     }
-} // namespace Rendurr
+} // namespace rnd

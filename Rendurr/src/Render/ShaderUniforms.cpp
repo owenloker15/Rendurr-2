@@ -5,7 +5,7 @@
 
 #include "Core/Log.h"
 
-namespace Rendurr
+namespace rnd
 {
     /*
     CameraUniform::CameraUniform(glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
@@ -45,4 +45,4 @@ namespace Rendurr
     }
     */
 
-} // namespace Rendurr
+} // namespace rnd

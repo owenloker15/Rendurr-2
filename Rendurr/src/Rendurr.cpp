@@ -3,7 +3,7 @@
 #include "Core/Log.h"
 #include "GLFW/glfw3.h"
 
-namespace Rendurr
+namespace rnd
 {
     void init()
     {
@@ -12,4 +12,4 @@ namespace Rendurr
             glfwTerminate();
         }
     }
-} // namespace Rendurr
+} // namespace rnd

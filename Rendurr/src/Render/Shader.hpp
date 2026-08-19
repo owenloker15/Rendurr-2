@@ -4,7 +4,7 @@
 
 #include "ShaderUniforms.hpp"
 
-namespace Rendurr
+namespace rnd
 {
     struct ShaderData
     {
@@ -40,4 +40,4 @@ namespace Rendurr
                                     const char* uniformName,
                                     const glm::mat4& value);
 
-} // namespace Rendurr
+} // namespace rnd

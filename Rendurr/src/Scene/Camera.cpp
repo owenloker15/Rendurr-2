@@ -1,4 +1,4 @@
 #include "Camera.hpp"
 
-namespace Rendurr
+namespace rnd
 {}

@@ -27,7 +27,7 @@ namespace Editurr
     // TEXTURES BEGIN
     AssetHandle texture_create(AssetManager& assetManager,
                                const std::filesystem::path& path,
-                               Rendurr::TextureType type);
+                               rnd::TextureType type);
     const Texture& asset_manager_get_texture(const AssetManager& assetManager, AssetHandle handle);
     // TEXTURES END
 

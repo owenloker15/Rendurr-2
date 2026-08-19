@@ -4,7 +4,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 
-namespace Rendurr
+namespace rnd
 {
     CameraController::CameraController(float aspectRatio, float zoom, ProjectionType projectionType)
         : m_camera{.position = {0, 0, 5},
@@ -117,4 +117,4 @@ namespace Rendurr
     {
         return m_camera.position;
     }
-} // namespace Rendurr
+} // namespace rnd

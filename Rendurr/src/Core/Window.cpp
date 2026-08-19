@@ -5,7 +5,7 @@
 #include "GLFW/glfw3.h"
 #include "Log.h"
 
-namespace Rendurr
+namespace rnd
 {
     struct ScrollAccumulator
     {
@@ -85,7 +85,7 @@ namespace Rendurr
         accum->deltaY = 0.0f;
 
         // Keyboard input
-        for (uint16_t key = 0; key <= Rendurr::MaxKeyCode; ++key) {
+        for (uint16_t key = 0; key <= rnd::MaxKeyCode; ++key) {
             bool wasDown = get_bit(input.keysDown, key);
             bool isDown = glfwGetKey(window.glfwWindow, key) == GLFW_PRESS;
 
@@ -130,4 +130,4 @@ namespace Rendurr
         input.deltaY = input.mouseYPos - input.prevMouseYPos;
     }
 
-} // namespace Rendurr
+} // namespace rnd

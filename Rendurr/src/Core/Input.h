@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 
-namespace Rendurr
+namespace rnd
 {
     using KeyCode = uint16_t;
     using MouseCode = uint16_t;
@@ -232,4 +232,4 @@ namespace Rendurr
             ButtonMiddle = Button2
         };
     } // namespace Key
-} // namespace Rendurr
+} // namespace rnd

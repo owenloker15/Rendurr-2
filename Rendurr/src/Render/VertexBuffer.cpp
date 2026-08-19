@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace Rendurr
+namespace rnd
 {
     VertexBufferData vertex_buffer_create(std::vector<Vertex>&& vertices)
     {
@@ -22,4 +22,4 @@ namespace Rendurr
         glDeleteBuffers(1, &rendererId);
     }
 
-} // namespace Rendurr
+} // namespace rnd

@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace Rendurr
+namespace rnd
 {
     VertexArrayData vertex_array_create(std::vector<Vertex>&& vertices,
                                         std::vector<uint32_t>&& indices)
@@ -52,4 +52,4 @@ namespace Rendurr
         glBindVertexArray(0);
     }
 
-} // namespace Rendurr
+} // namespace rnd
